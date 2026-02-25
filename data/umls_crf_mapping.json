@@ -1,0 +1,1869 @@
+[
+  {
+    "item": "duration of the patient's consciousness recovery",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0160124",
+    "preferred_name": "Concussion with prolonged loss of consciousness and return to pre-existing conscious level",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Concussion with loss of consciousness for more than 24 hours with complete recovery",
+      "Concussion with loss of consciousness for more than 24 hours with complete recovery"
+    ],
+    "query_used": "consciousness recovery",
+    "status": "found (patch)"
+  },
+  {
+    "item": "duration of the patient's unconsciousness",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0041657",
+    "preferred_name": "Unconscious State",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "State, Unconscious",
+      "Unconscious States",
+      "Consciousness, Loss of",
+      "Loss of consciousness",
+      "Loss of consciousness"
+    ],
+    "query_used": "loss of consciousness",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "first episod of epilepsy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0014544",
+    "preferred_name": "Epilepsy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "epilepsy",
+    "status": "found (patch3)"
+  },
+  {
+    "item": "known history of epilepsy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0455392",
+    "preferred_name": "FH: Epilepsy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Family history of epilepsy",
+      "Family history of epilepsy",
+      "epilepsy; family history",
+      "family history; epilepsy",
+      "Family history: Epilepsy"
+    ],
+    "query_used": "history of epilepsy",
+    "status": "found (patch)"
+  },
+  {
+    "item": "history of allergy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0455453",
+    "preferred_name": "Family history: Allergy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Family history of allergy",
+      "family history; allergy",
+      "allergy; family history",
+      "family history of allergies",
+      "FH: Allergy"
+    ],
+    "query_used": "history of allergy",
+    "status": "found"
+  },
+  {
+    "item": "history of recent trauma",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C5937502",
+    "preferred_name": "History of recent trauma to external ear canal",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "history of recent trauma",
+    "status": "found"
+  },
+  {
+    "item": "pregnancy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0032961",
+    "preferred_name": "Pregnancy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "pregnancy",
+    "status": "found"
+  },
+  {
+    "item": "history of drug abuse",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C1299544",
+    "preferred_name": "history of drug abuse",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "abuse drug history",
+      "history; abuse, drugs",
+      "history; abuse, substance"
+    ],
+    "query_used": "history of drug abuse",
+    "status": "found"
+  },
+  {
+    "item": "history of alcohol abuse",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0221628",
+    "preferred_name": "history of alcohol abuse",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "History of alcohol abuse",
+      "alcohol abuse history",
+      "history alcohol abuse",
+      "history; abuse, alcohol"
+    ],
+    "query_used": "history of alcohol abuse",
+    "status": "found"
+  },
+  {
+    "item": "anticoagulants or antiplatelet drug therapy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C5912108",
+    "preferred_name": "Administer statin therapy, antihypertensive, antiplatelet, or anticoagulant medications, as prescribed",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "anticoagulant therapy antiplatelet",
+    "status": "found (patch)"
+  },
+  {
+    "item": "presence of prodromal symptoms",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0240805",
+    "preferred_name": "Prodrome",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "PRODROME",
+      "Prodrome, NOS",
+      "prodromes",
+      "prodrome",
+      "Premonitory symptom"
+    ],
+    "query_used": "prodrome",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "compliance with antiepileptic therapy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C2364172",
+    "preferred_name": "Adherence To Medication Regime",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "medication adherence",
+    "status": "found (patch3)"
+  },
+  {
+    "item": "antiepileptic therapy already in place",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0003286",
+    "preferred_name": "Anticonvulsants",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "anticonvulsant drug",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "poly-pharmacological therapy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C2922974",
+    "preferred_name": "Polypharmacy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "polypharmacy",
+    "status": "found (patch)"
+  },
+  {
+    "item": "diffuse vascular disease",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0497252",
+    "preferred_name": "Atherosclerosis/peripheral vascular disease",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Other arterial obstructive/peripheral vascular disease"
+    ],
+    "query_used": "atherosclerosis vascular",
+    "status": "found (patch)"
+  },
+  {
+    "item": "neuropsychiatric disorders",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C5774224",
+    "preferred_name": "DEVELOPMENTAL DELAY, BEHAVIORAL ABNORMALITIES, AND NEUROPSYCHIATRIC DISORDERS",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "DEDBANP"
+    ],
+    "query_used": "neuropsychiatric disorders",
+    "status": "found"
+  },
+  {
+    "item": "presence of pacemaker",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C2240369",
+    "preferred_name": "Presence of cardiac pacemaker",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "presence; cardiac pacemaker",
+      "presence; pacemaker, cardiac",
+      "Cardiac pacemaker",
+      "cardiac pacemaker",
+      "cardiac; pacemaker"
+    ],
+    "query_used": "presence of pacemaker",
+    "status": "found"
+  },
+  {
+    "item": "presence of defibrillator",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C4270802",
+    "preferred_name": "Presence of cardioverter-defibrillator (ICD)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "presence of defibrillator",
+    "status": "found"
+  },
+  {
+    "item": "antihypertensive therapy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0413945",
+    "preferred_name": "Guanethidine adverse reaction",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "adverse reaction to guanethidine",
+      "Guanethidine adverse reaction (disorder)",
+      "adverse effect of guanethidine",
+      "adverse effect of guanethidine (diagnosis)",
+      "adverse effect of drug therapy antihypertensive guanethidine"
+    ],
+    "query_used": "antihypertensive drug therapy",
+    "status": "found (patch)"
+  },
+  {
+    "item": "cardiovascular diseases",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0007222",
+    "preferred_name": "Cardiovascular Diseases",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Cardiovascular Disease",
+      "Cardiovascular disease"
+    ],
+    "query_used": "cardiovascular diseases",
+    "status": "found"
+  },
+  {
+    "item": "neurodegenerative diseases",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0524851",
+    "preferred_name": "Neurodegenerative Disorders",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "neurodegenerative disorders",
+      "neurodegenerative disorder",
+      "NEURODEGENERATIVE DISORDER",
+      "Neurodegenerative Disorder",
+      "Neurodegenerative disorder"
+    ],
+    "query_used": "neurodegenerative diseases",
+    "status": "found"
+  },
+  {
+    "item": "peripheral neuropathy",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0031117",
+    "preferred_name": "Peripheral Neuropathy",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Peripheral neuropathy",
+      "PERIPHERAL NEUROPATHY",
+      "peripheral neuropathy"
+    ],
+    "query_used": "peripheral neuropathy",
+    "status": "found"
+  },
+  {
+    "item": "immunosuppression",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0021079",
+    "preferred_name": "Therapeutic immunosuppression",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "therapeutic immunosuppression",
+      "Immunosuppression",
+      "Immunosuppressions",
+      "immunosuppression"
+    ],
+    "query_used": "immunosuppression",
+    "status": "found"
+  },
+  {
+    "item": "palliative care",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0030231",
+    "preferred_name": "Palliative Care",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Care, Palliative",
+      "Palliative care"
+    ],
+    "query_used": "palliative care",
+    "status": "found"
+  },
+  {
+    "item": "problematic family context",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0680071",
+    "preferred_name": "family dysfunction",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Family dysfunction"
+    ],
+    "query_used": "family dysfunction",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "need but absence of a caregiver",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C5204234",
+    "preferred_name": "Plan to Take Leave of Absence From Work Over Next Year Because of Caregiving Question",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Plan to Take Leave of Absence From Work Over Next Year Because of Caregiving"
+    ],
+    "query_used": "caregiver absence",
+    "status": "found (patch)"
+  },
+  {
+    "item": "homelessness",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0237154",
+    "preferred_name": "Homelessness",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "homelessness",
+      "Homeless"
+    ],
+    "query_used": "homelessness",
+    "status": "found"
+  },
+  {
+    "item": "living alone",
+    "cluster": "DEMOGRAPHICS",
+    "cui": "C0439044",
+    "preferred_name": "Living Alone",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Lives alone",
+      "Living alone"
+    ],
+    "query_used": "living alone",
+    "status": "found"
+  },
+  {
+    "item": "level of autonomy (mobility)",
+    "cluster": "VITALS",
+    "cui": "C3694606",
+    "preferred_name": "decrease in mobility noted within last three months",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "functional status decrease noted within last 3 months mobility",
+      "decrease in mobility noted within last three months (history)"
+    ],
+    "query_used": "functional status mobility",
+    "status": "found (patch)"
+  },
+  {
+    "item": "level of consciousness",
+    "cluster": "VITALS",
+    "cui": "C0234425",
+    "preferred_name": "Level of consciousness",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "consciousness levels",
+      "Level of Consciousness"
+    ],
+    "query_used": "level of consciousness",
+    "status": "found"
+  },
+  {
+    "item": "respiratory rate",
+    "cluster": "VITALS",
+    "cui": "C0231832",
+    "preferred_name": "Respiratory rate",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "respiratory rate",
+    "status": "found"
+  },
+  {
+    "item": "body temperature",
+    "cluster": "VITALS",
+    "cui": "C0005903",
+    "preferred_name": "Body Temperature",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Body Temperatures",
+      "Temperature, Body",
+      "Temperatures, Body"
+    ],
+    "query_used": "body temperature",
+    "status": "found"
+  },
+  {
+    "item": "heart rate",
+    "cluster": "VITALS",
+    "cui": "C0018810",
+    "preferred_name": "heart rate",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Heart Rate",
+      "Heart Rates",
+      "Rate, Heart"
+    ],
+    "query_used": "heart rate",
+    "status": "found"
+  },
+  {
+    "item": "blood pressure",
+    "cluster": "VITALS",
+    "cui": "C0005823",
+    "preferred_name": "Blood Pressure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Pressure, Blood",
+      "Blood pressure"
+    ],
+    "query_used": "blood pressure",
+    "status": "found"
+  },
+  {
+    "item": "presence of respiratory distress",
+    "cluster": "VITALS",
+    "cui": "C0802057",
+    "preferred_name": "Bacteria:Prid:Pt:Sputum:Nom:Acute respiratory distress culture",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Bacteria identified ARDS culture Nom (Sput)",
+      "Bacteria:Presence or Identity:To identify measures at a point in time:Sputum:Nominal:Acute respiratory distress culture",
+      "Bacteria identified in Sputum by Acute Respiratory Distress (ARDS) culture",
+      "Bacteria Spt ARDS Cult"
+    ],
+    "query_used": "presence of respiratory distress",
+    "status": "found"
+  },
+  {
+    "item": "spo2",
+    "cluster": "VITALS",
+    "cui": "C4709573",
+    "preferred_name": "Monitor oxygen saturation (SpO2) by noninvasive pulse oximetry and CO2 detection",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "oxygen saturation SpO2 pulse oximetry",
+    "status": "found"
+  },
+  {
+    "item": "ph",
+    "cluster": "LABS",
+    "cui": "C0428199",
+    "preferred_name": "Arterial blood pH measurement",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Arterial Blood pH Measurement",
+      "arterial blood pH measurement",
+      "arterial pH",
+      "pH measurement, arterial",
+      "Arterial blood pH"
+    ],
+    "query_used": "blood pH arterial",
+    "status": "found"
+  },
+  {
+    "item": "pa02",
+    "cluster": "LABS",
+    "cui": "C1821157",
+    "preferred_name": "PaO2 (partial pressure of oxygen in arterial blood)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Partial pressure of oxygen in arterial blood (PaO2)"
+    ],
+    "query_used": "arterial oxygen pressure PaO2",
+    "status": "found"
+  },
+  {
+    "item": "pac02",
+    "cluster": "LABS",
+    "cui": "C1822070",
+    "preferred_name": "PaCO2 (partial pressure of carbon dioxide in arterial blood)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Partial pressure of carbon dioxide in arterial blood (PaCO2)"
+    ],
+    "query_used": "arterial carbon dioxide pressure PaCO2",
+    "status": "found"
+  },
+  {
+    "item": "hc03-",
+    "cluster": "LABS",
+    "cui": "C1820820",
+    "preferred_name": "Arterial bicarbonate (HCO3)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "bicarbonate HCO3",
+    "status": "found"
+  },
+  {
+    "item": "lactates",
+    "cluster": "LABS",
+    "cui": "C0022924",
+    "preferred_name": "Lactates",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "lactate",
+      "lactates"
+    ],
+    "query_used": "lactates",
+    "status": "found"
+  },
+  {
+    "item": "hemoglobin",
+    "cluster": "LABS",
+    "cui": "C0019046",
+    "preferred_name": "Hemoglobin",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "hemoglobin",
+    "status": "found"
+  },
+  {
+    "item": "platelets",
+    "cluster": "LABS",
+    "cui": "C0005821",
+    "preferred_name": "Blood Platelets",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Blood platelet",
+      "Platelet, Blood",
+      "Platelets, Blood"
+    ],
+    "query_used": "platelets",
+    "status": "found"
+  },
+  {
+    "item": "leukocytes",
+    "cluster": "LABS",
+    "cui": "C0023516",
+    "preferred_name": "Leukocytes",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "leukocytes",
+    "status": "found"
+  },
+  {
+    "item": "c-reactive protein",
+    "cluster": "LABS",
+    "cui": "C0006560",
+    "preferred_name": "C-reactive protein",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "C reactive protein"
+    ],
+    "query_used": "c-reactive protein",
+    "status": "found"
+  },
+  {
+    "item": "blood sodium",
+    "cluster": "LABS",
+    "cui": "C0853174",
+    "preferred_name": "Blood sodium",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "blood sodium",
+      "sodium blood"
+    ],
+    "query_used": "blood sodium",
+    "status": "found"
+  },
+  {
+    "item": "blood potassium",
+    "cluster": "LABS",
+    "cui": "C0853173",
+    "preferred_name": "Blood potassium",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "blood potassium",
+      "potassium blood"
+    ],
+    "query_used": "blood potassium",
+    "status": "found"
+  },
+  {
+    "item": "blood glucose",
+    "cluster": "LABS",
+    "cui": "C0392201",
+    "preferred_name": "Blood glucose measurement",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Glucose measurement, blood",
+      "blood glucose measurements",
+      "Glucose, blood, measurement",
+      "Blood Glucose Measurement",
+      "blood glucose measurement"
+    ],
+    "query_used": "blood glucose",
+    "status": "found"
+  },
+  {
+    "item": "creatinine",
+    "cluster": "LABS",
+    "cui": "C0010294",
+    "preferred_name": "creatinine",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Creatinine"
+    ],
+    "query_used": "creatinine",
+    "status": "found"
+  },
+  {
+    "item": "transaminases",
+    "cluster": "LABS",
+    "cui": "C0002594",
+    "preferred_name": "Transaminases",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Transaminase",
+      "transaminase",
+      "transaminases",
+      "Aminotransferases"
+    ],
+    "query_used": "transaminases",
+    "status": "found"
+  },
+  {
+    "item": "inr",
+    "cluster": "LABS",
+    "cui": "C3853850",
+    "preferred_name": "International Normalized Ratio of Prothrombin Time",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "international normalized ratio prothrombin",
+    "status": "found (patch)"
+  },
+  {
+    "item": "troponin",
+    "cluster": "LABS",
+    "cui": "C0041199",
+    "preferred_name": "Troponin",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "troponin",
+      "Troponin, NOS",
+      "troponins"
+    ],
+    "query_used": "troponin",
+    "status": "found"
+  },
+  {
+    "item": "bnp or nt-pro-bnp",
+    "cluster": "LABS",
+    "cui": "C5678315",
+    "preferred_name": "Elevated brain natriuretic peptide (BNP)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "BNP brain natriuretic peptide",
+    "status": "found (patch)"
+  },
+  {
+    "item": "d-dimer",
+    "cluster": "LABS",
+    "cui": "C0972588",
+    "preferred_name": "Reagents, Hematology, Fibrinolysis, Fibrinogen Degradation Product, D-Dimer",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "D-dimer fibrinogen degradation",
+    "status": "found"
+  },
+  {
+    "item": "blood calcium",
+    "cluster": "LABS",
+    "cui": "C0729820",
+    "preferred_name": "Blood calcium measurement",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Calcium, blood, measurement",
+      "blood calcium measurement",
+      "blood calcium measurement (lab test)",
+      "Blood calcium level",
+      "blood calcium levels"
+    ],
+    "query_used": "blood calcium",
+    "status": "found"
+  },
+  {
+    "item": "serum creatinine kinase",
+    "cluster": "LABS",
+    "cui": "C2229882",
+    "preferred_name": "serum total creatine kinase (CK) measurement",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "serum total creatine kinase (CK) measurement (lab test)",
+      "total serum creatine kinase level"
+    ],
+    "query_used": "creatine kinase CK serum",
+    "status": "found"
+  },
+  {
+    "item": "blood alcohol",
+    "cluster": "LABS",
+    "cui": "C0855900",
+    "preferred_name": "Blood ethanol",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "blood ethanol",
+      "ethanol blood"
+    ],
+    "query_used": "blood ethanol",
+    "status": "found (patch)"
+  },
+  {
+    "item": "blood drug dosage",
+    "cluster": "LABS",
+    "cui": "C1720825",
+    "preferred_name": "Therapeutic Drug Monitoring",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Drug Monitoring, Therapeutic",
+      "Monitoring, Therapeutic Drug",
+      "Therapeutic drug monitoring",
+      "Therapeutic drug monitoring"
+    ],
+    "query_used": "therapeutic drug monitoring",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "urine drug test",
+    "cluster": "LABS",
+    "cui": "C5426952",
+    "preferred_name": "Drug screen comment | Urine | Drug toxicology",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "urine drug screen toxicology",
+    "status": "found"
+  },
+  {
+    "item": "sars-cov-2 swab test",
+    "cluster": "LABS",
+    "cui": "C5432131",
+    "preferred_name": "SARS-CoV-2 (COVID-19) culture",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "viral culture SARS-CoV-2 (COVID-19)",
+      "SARS-CoV-2 (COVID-19) culture (lab test)"
+    ],
+    "query_used": "COVID-19 SARS-CoV-2 test",
+    "status": "found (patch)"
+  },
+  {
+    "item": "chronic pulmonary disease",
+    "cluster": "PROBLEMS",
+    "cui": "C0238074",
+    "preferred_name": "Chronic pulmonary heart disease",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Chronic pulmonary heart disease, NOS",
+      "Chronic Pulmonary Heart Disease",
+      "Cor Pulmonale",
+      "Chronic cor pulmonale"
+    ],
+    "query_used": "chronic pulmonary disease",
+    "status": "found"
+  },
+  {
+    "item": "chronic respiratory failure",
+    "cluster": "PROBLEMS",
+    "cui": "C0264492",
+    "preferred_name": "Chronic respiratory failure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "chronic respiratory failure",
+    "status": "found"
+  },
+  {
+    "item": "chronic cardiac failure",
+    "cluster": "PROBLEMS",
+    "cui": "C0264716",
+    "preferred_name": "Chronic heart failure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Heart failure, chronic",
+      "chronic failure heart",
+      "chronic heart failure",
+      "Cardiac failure chronic"
+    ],
+    "query_used": "chronic cardiac failure",
+    "status": "found"
+  },
+  {
+    "item": "chronic renal failure",
+    "cluster": "PROBLEMS",
+    "cui": "C0022661",
+    "preferred_name": "Kidney Failure, Chronic",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Chronic Kidney Failure",
+      "KIDNEY, FAILURE, CHRONIC",
+      "KIDNEY FAILURE CHRONIC",
+      "chronic kidney failure",
+      "Chronic kidney failure"
+    ],
+    "query_used": "chronic renal failure",
+    "status": "found"
+  },
+  {
+    "item": "chronic metabolic failure",
+    "cluster": "PROBLEMS",
+    "cui": "C1263722",
+    "preferred_name": "Chronic metabolic disorder",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "chronic metabolic disorder",
+      "chronic metabolic disorder (diagnosis)",
+      "Chronic metabolic disease",
+      "Chronic metabolic disorder (disorder)"
+    ],
+    "query_used": "metabolic disorder chronic",
+    "status": "found (patch)"
+  },
+  {
+    "item": "chronic rheumatologic disease",
+    "cluster": "PROBLEMS",
+    "cui": "C0175708",
+    "preferred_name": "Chronic rheumatic heart disease",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Rheumatic heart disease, chronic",
+      "CHRONIC RHEUMATIC HEART DISEASE",
+      "Chronic rheumatic heart diseases",
+      "Chronic rheumatic heart diseases",
+      "chronic rheumatic carditis"
+    ],
+    "query_used": "rheumatic disease chronic",
+    "status": "found (patch)"
+  },
+  {
+    "item": "active neoplasia",
+    "cluster": "PROBLEMS",
+    "cui": "C0006826",
+    "preferred_name": "Malignant Neoplasms",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Neoplasm, malignant",
+      "Neoplasm, malignant",
+      "Neoplasm, malignant",
+      "NEOPLASM MALIGNANT",
+      "NEOPLASM MALIGNANT"
+    ],
+    "query_used": "malignant neoplasm",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "chronic dialysis",
+    "cluster": "PROBLEMS",
+    "cui": "C0743165",
+    "preferred_name": "dialysis chronic",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "chronic dialysis",
+      "DIALYSIS CHRONIC"
+    ],
+    "query_used": "chronic dialysis",
+    "status": "found"
+  },
+  {
+    "item": "heart failure",
+    "cluster": "PROBLEMS",
+    "cui": "C0018801",
+    "preferred_name": "Heart failure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "heart failure",
+    "status": "found"
+  },
+  {
+    "item": "pneumonia",
+    "cluster": "PROBLEMS",
+    "cui": "C0032285",
+    "preferred_name": "Pneumonia",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "pneumonia",
+    "status": "found"
+  },
+  {
+    "item": "copd exacerbation",
+    "cluster": "PROBLEMS",
+    "cui": "C0740304",
+    "preferred_name": "COPD exacerbation",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "copd exacerbation",
+      "exacerbation copd",
+      "COPD EXACERBATION",
+      "Chronic obstructive airways disease exacerbated"
+    ],
+    "query_used": "copd exacerbation",
+    "status": "found"
+  },
+  {
+    "item": "acute pulmonary edema",
+    "cluster": "PROBLEMS",
+    "cui": "C0155919",
+    "preferred_name": "Acute pulmonary edema",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Acute Pulmonary Edema",
+      "Acute pulmonary edema, NOS",
+      "Acute pulmonary edema NOS",
+      "Acute pulmonary oedema"
+    ],
+    "query_used": "acute pulmonary edema",
+    "status": "found"
+  },
+  {
+    "item": "asthma exacerbation",
+    "cluster": "PROBLEMS",
+    "cui": "C0349790",
+    "preferred_name": "Exacerbation of asthma",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "asthma exacerbations",
+      "asthma exacerbation",
+      "exacerbation asthma",
+      "exacerbation of asthma",
+      "of asthma exacerbation"
+    ],
+    "query_used": "asthma exacerbation",
+    "status": "found"
+  },
+  {
+    "item": "respiratory failure",
+    "cluster": "PROBLEMS",
+    "cui": "C1145670",
+    "preferred_name": "Respiratory Failure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Respiratory Failures",
+      "FAILURE RESPIRATORY",
+      "Failure, Respiratory",
+      "RESPIRATORY FAILURE"
+    ],
+    "query_used": "respiratory failure",
+    "status": "found"
+  },
+  {
+    "item": "intoxication",
+    "cluster": "PROBLEMS",
+    "cui": "C0728899",
+    "preferred_name": "Intoxication",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "INTOXICATION"
+    ],
+    "query_used": "intoxication",
+    "status": "found"
+  },
+  {
+    "item": "covid 19",
+    "cluster": "PROBLEMS",
+    "cui": "C5203670",
+    "preferred_name": "COVID-19 Virus Disease",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "COVID 19 Virus Disease",
+      "COVID-19 Virus Diseases",
+      "Disease, COVID-19 Virus",
+      "Virus Disease, COVID-19",
+      "Disease caused by 2019 novel coronavirus"
+    ],
+    "query_used": "covid 19",
+    "status": "found"
+  },
+  {
+    "item": "influenza and various infections",
+    "cluster": "PROBLEMS",
+    "cui": "C2750725",
+    "preferred_name": "Usually precipitated by viral infection (influenza A, influenza B, parainfluenza II, and Mycoplasma pneumoniae)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "influenza infection viral",
+    "status": "found"
+  },
+  {
+    "item": "pneumothorax",
+    "cluster": "PROBLEMS",
+    "cui": "C0032326",
+    "preferred_name": "Pneumothorax",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "pneumothorax",
+    "status": "found"
+  },
+  {
+    "item": "situational syncope",
+    "cluster": "PROBLEMS",
+    "cui": "C0039070",
+    "preferred_name": "Syncope",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "syncope",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "epilepsy / epileptic seizure",
+    "cluster": "PROBLEMS",
+    "cui": "C4286225",
+    "preferred_name": "IVD Panels, Human Genetics, Encephalopathy, Epilepsy/Seizure Disorder, Early Epileptic",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Early Infantile Epileptic Encephalopathy with Suppression Bursts Gene Panel Reagents",
+      "Early Infantile Epileptic Encephalopathy Gene Panel Reagents",
+      "EIEE Gene Panel Reagents",
+      "Ohtahara syndrome Gene Panel Reagents"
+    ],
+    "query_used": "epileptic seizure epilepsy",
+    "status": "found"
+  },
+  {
+    "item": "pulmonary embolism",
+    "cluster": "PROBLEMS",
+    "cui": "C0034065",
+    "preferred_name": "Pulmonary Embolism",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Embolism, Pulmonary",
+      "Embolisms, Pulmonary",
+      "Pulmonary Embolisms",
+      "EMBOLISM PULMONARY",
+      "EMBOLISM, PULMONARY"
+    ],
+    "query_used": "pulmonary embolism",
+    "status": "found"
+  },
+  {
+    "item": "arrhythmia",
+    "cluster": "PROBLEMS",
+    "cui": "C0003811",
+    "preferred_name": "Cardiac Arrhythmia",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "CARDIAC ARRHYTHMIA",
+      "CARDIAC ARRHYTHMIA NOS",
+      "ARRHYTHMIA CARDIAC (NOS)",
+      "CARDIAC ARRHYTHMIA (NOS)",
+      "Cardiac arrhythmia, NOS"
+    ],
+    "query_used": "arrhythmia",
+    "status": "found"
+  },
+  {
+    "item": "cardiac tamponade",
+    "cluster": "PROBLEMS",
+    "cui": "C0007177",
+    "preferred_name": "Cardiac Tamponade",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Cardiac Tamponades",
+      "Tamponade, Cardiac",
+      "Tamponades, Cardiac",
+      "CARDIAC TAMPONADE"
+    ],
+    "query_used": "cardiac tamponade",
+    "status": "found"
+  },
+  {
+    "item": "aortic dissection",
+    "cluster": "PROBLEMS",
+    "cui": "C0340643",
+    "preferred_name": "Dissection of aorta",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "aorta dissections",
+      "aorta dissection",
+      "dissection aorta",
+      "AORTA DISSECTION",
+      "dissection; aorta"
+    ],
+    "query_used": "aortic dissection",
+    "status": "found"
+  },
+  {
+    "item": "acute coronary syndrome",
+    "cluster": "PROBLEMS",
+    "cui": "C0948089",
+    "preferred_name": "Acute Coronary Syndrome",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "acute coronary syndromes",
+      "acute coronary syndrome",
+      "syndrome acute coronary",
+      "Acute coronary syndrome"
+    ],
+    "query_used": "acute coronary syndrome",
+    "status": "found"
+  },
+  {
+    "item": "hemorrhage",
+    "cluster": "PROBLEMS",
+    "cui": "C0019080",
+    "preferred_name": "Hemorrhage",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "hemorrhage",
+    "status": "found"
+  },
+  {
+    "item": "severe anemia",
+    "cluster": "PROBLEMS",
+    "cui": "C0238644",
+    "preferred_name": "Anemia, severe",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "ANEMIA, SEVERE",
+      "anemia severe",
+      "severe anemia",
+      "profound anemia",
+      "Anemia, profound"
+    ],
+    "query_used": "severe anemia",
+    "status": "found"
+  },
+  {
+    "item": "concussive head trauma",
+    "cluster": "PROBLEMS",
+    "cui": "C2029620",
+    "preferred_name": "head injury with dementia with concussion",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "head injury with dementia with concussion (diagnosis)"
+    ],
+    "query_used": "concussion head injury",
+    "status": "found (patch)"
+  },
+  {
+    "item": "tloc during effort",
+    "cluster": "SYMPTOMS",
+    "cui": "C0235242",
+    "preferred_name": "Syncope, Effort",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Effort syncope",
+      "Effort syncope",
+      "Effort Syncope",
+      "Effort Syncopes",
+      "Syncopes, Effort"
+    ],
+    "query_used": "exertional syncope",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "tloc while supine",
+    "cluster": "SYMPTOMS",
+    "cui": "C0041657",
+    "preferred_name": "Unconscious State",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "loss of consciousness",
+    "status": "found (patch3)"
+  },
+  {
+    "item": "drowsiness, confusion, disorientation as postcritical state",
+    "cluster": "SYMPTOMS",
+    "cui": "C2938986",
+    "preferred_name": "Postictal state prolongation",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "postictal state",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "stiffness during the episode",
+    "cluster": "SYMPTOMS",
+    "cui": "C0026837",
+    "preferred_name": "Muscle Rigidity",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "muscle rigidity",
+    "status": "found (patch3)"
+  },
+  {
+    "item": "drooling during the episode",
+    "cluster": "SYMPTOMS",
+    "cui": "C0013132",
+    "preferred_name": "Drooling",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "drooling",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "tonic-clonic seizures",
+    "cluster": "SYMPTOMS",
+    "cui": "C0494475",
+    "preferred_name": "Tonic-Clonic Seizures",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Tonic-clonic seizures",
+      "Tonic-clonic seizure",
+      "Seizures, clonic-tonic",
+      "clonic seizures tonic",
+      "clonic tonic seizures"
+    ],
+    "query_used": "tonic-clonic seizures",
+    "status": "found"
+  },
+  {
+    "item": "pale skin during the episode",
+    "cluster": "SYMPTOMS",
+    "cui": "C4711873",
+    "preferred_name": "Monitor for complications (e.g., blurred vision, confusion, dizziness, syncope, pallor, cold sweating, tachycardia, dizziness, drowsiness, weakness, altered level of consciousness, seizure, shortness of breath, chest pain)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "pallor syncope",
+    "status": "found (patch)"
+  },
+  {
+    "item": "eye deviation during the episode",
+    "cluster": "SYMPTOMS",
+    "cui": "C5767479",
+    "preferred_name": "Sustained horizontal conjugate gaze deviation",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "sustained horizontal conjugate gaze deviation",
+      "Sustained horizontal conjugate gaze deviation (disorder)",
+      "sustained horizontal conjugate gaze deviation (diagnosis)"
+    ],
+    "query_used": "gaze deviation conjugate",
+    "status": "found (patch)"
+  },
+  {
+    "item": "situation description, like coughing, prolonged periods of straining, sudden abdominal pain, phlebotomy",
+    "cluster": "SYMPTOMS",
+    "cui": "C0340854",
+    "preferred_name": "Syncope, Situational",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Situational syncope",
+      "Situational syncope",
+      "Situational syncope",
+      "Situational Syncope",
+      "Situational Syncope"
+    ],
+    "query_used": "situational syncope",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "chest pain",
+    "cluster": "SYMPTOMS",
+    "cui": "C0008031",
+    "preferred_name": "Chest Pain",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Chest Pains",
+      "CHEST PAIN"
+    ],
+    "query_used": "chest pain",
+    "status": "found"
+  },
+  {
+    "item": "head or other districts trauma",
+    "cluster": "SYMPTOMS",
+    "cui": "C0744612",
+    "preferred_name": "head injury trauma",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "head injuries trauma",
+      "head trauma injury",
+      "HEAD INJURY TRAUMA"
+    ],
+    "query_used": "head trauma injury",
+    "status": "found"
+  },
+  {
+    "item": "tongue bite",
+    "cluster": "SYMPTOMS",
+    "cui": "C0241424",
+    "preferred_name": "Tongue biting",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "TONGUE BITING",
+      "bite tongue",
+      "bites tongue",
+      "biting tongue"
+    ],
+    "query_used": "tongue bite",
+    "status": "found"
+  },
+  {
+    "item": "agitation",
+    "cluster": "SYMPTOMS",
+    "cui": "C0085631",
+    "preferred_name": "Agitation",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "agitation",
+    "status": "found"
+  },
+  {
+    "item": "foreign body in the airways",
+    "cluster": "SYMPTOMS",
+    "cui": "C3513308",
+    "preferred_name": "Removal of foreign body in lung airways using an endoscope",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "foreign body in the airways",
+    "status": "found"
+  },
+  {
+    "item": "improvement of dyspnea",
+    "cluster": "SYMPTOMS",
+    "cui": "C0013404",
+    "preferred_name": "Dyspnea",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "dyspnea",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "presence of dyspnea",
+    "cluster": "SYMPTOMS",
+    "cui": "C5913402",
+    "preferred_name": "Recognize presence of early warning signs and symptoms of compromised hemodynamic system (e.g., dyspnea, decreased ability to exercise, orthopnea, profound fatigue, dizziness, light-headedness, edema, palpitations, paroxysmal nocturnal dyspnea, sudden weight gain)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "presence of dyspnea",
+    "status": "found"
+  },
+  {
+    "item": "dementia",
+    "cluster": "SYMPTOMS",
+    "cui": "C0497327",
+    "preferred_name": "Dementia",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "dementia",
+    "status": "found"
+  },
+  {
+    "item": "general condition deterioration",
+    "cluster": "SYMPTOMS",
+    "cui": "C4505323",
+    "preferred_name": "Clinical Deterioration",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Clinical Deteriorations",
+      "Deterioration, Clinical"
+    ],
+    "query_used": "clinical deterioration",
+    "status": "found (patch)"
+  },
+  {
+    "item": "ab ingestis pneumonia",
+    "cluster": "SYMPTOMS",
+    "cui": "C0032290",
+    "preferred_name": "Aspiration Pneumonia",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Aspiration Pneumonias",
+      "Pneumonia, Aspiration",
+      "Pneumonias, Aspiration",
+      "ASPIRATION PNEUMONIA",
+      "Aspiration pneumonia"
+    ],
+    "query_used": "aspiration pneumonia",
+    "status": "found"
+  },
+  {
+    "item": "further seizures in the ed",
+    "cluster": "SYMPTOMS",
+    "cui": "C3203523",
+    "preferred_name": "Acute repetitive seizure",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Acute repetitive seizures",
+      "Cluster seizure",
+      "Seizure cluster",
+      "Seizure cluster",
+      "Seizure cluster"
+    ],
+    "query_used": "recurrent seizures",
+    "status": "found (patch)"
+  },
+  {
+    "item": "improvement of patient's conditions",
+    "cluster": "SYMPTOMS",
+    "cui": "C3710291",
+    "preferred_name": "Bundled payments for care improvement initiative home visit for patient assessment performed by a qualified health care professional for individuals not considered homebound including, but not limited to, assessment of safety, falls, clinical status, fluid status, medication reconciliation/management, patient compliance with orders/plan of care, performance of activities of daily living, appropriateness of care setting; (for use only in the meidcare-approved bundled payments for care improvement initiative); may not be billed for a 30-day period covered by a transitional care management code",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "patient clinical improvement",
+    "status": "found (patch)"
+  },
+  {
+    "item": "administration of diuretics",
+    "cluster": "MEDICATIONS",
+    "cui": "C4710946",
+    "preferred_name": "Avoid administration of magnesium-depleting medications (e.g., loop and thiazide diuretics, aminoglycoside antibiotics, amphotericin B, digoxin, and cisplatin), as appropriate",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "administration of diuretics",
+    "status": "found"
+  },
+  {
+    "item": "administration of steroids",
+    "cluster": "MEDICATIONS",
+    "cui": "C0199243",
+    "preferred_name": "Administration of prophylactic steroid",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Prescription of drug, prophylactic, steroid",
+      "Prescription of prophylactic steroid",
+      "Steroid prophylaxis",
+      "prophylaxis steroids",
+      "steroid prophylaxis"
+    ],
+    "query_used": "administration of steroids",
+    "status": "found"
+  },
+  {
+    "item": "administration of bronchodilators",
+    "cluster": "MEDICATIONS",
+    "cui": "C0199477",
+    "preferred_name": "Bronchodilation responsiveness, spirometry as in 94010, pre- and post-bronchodilator administration",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Spirometry for bronchospasm evaluation before and after bronchodilator, NOS",
+      "BRNCDILAT RSPSE SPMTRY PRE&POST-BRNCDILAT ADMN"
+    ],
+    "query_used": "administration of bronchodilators",
+    "status": "found"
+  },
+  {
+    "item": "administration of oxygen/ventilation",
+    "cluster": "MEDICATIONS",
+    "cui": "C0184633",
+    "preferred_name": "Oxygen Therapy Care",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Oxygen therapy care",
+      "oxygen",
+      "oxygen",
+      "Oxygen",
+      "On oxygen"
+    ],
+    "query_used": "oxygen therapy",
+    "status": "found (patch)"
+  },
+  {
+    "item": "blood transfusions",
+    "cluster": "MEDICATIONS",
+    "cui": "C5981443",
+    "preferred_name": "Need for blood transfusions",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Blood transfusions"
+    ],
+    "query_used": "blood transfusions",
+    "status": "found"
+  },
+  {
+    "item": "administration of fluids",
+    "cluster": "MEDICATIONS",
+    "cui": "C0522792",
+    "preferred_name": "Administration of intravenous fluids",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Administration of intravenous fluids, NOS",
+      "administration fluid intravenous",
+      "administration of intravenous fluids",
+      "Fluid Therapy",
+      "Administers IV fluid therapy"
+    ],
+    "query_used": "administration of fluids",
+    "status": "found"
+  },
+  {
+    "item": "ecg, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C2830610",
+    "preferred_name": "Abnormal electrocardiogram [ECG] [EKG]",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "electrocardiogram ECG abnormality",
+    "status": "found"
+  },
+  {
+    "item": "ecg monitoring, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C4710780",
+    "preferred_name": "Apply electrocardiographic (ECG) \"wireless\" telemetry or \"hardwired\" electrodes and connect to a cardiac monitor, as indicated",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "ECG monitoring cardiac telemetry",
+    "status": "found"
+  },
+  {
+    "item": "eeg, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C0159099",
+    "preferred_name": "Nonspecific abnormal electroencephalogram (EEG)",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Nonspecific abnormal electroencephalogram [EEG]",
+      "Nonspecific abnormal EEG",
+      "Nonspecific abnormal electroencephalogram"
+    ],
+    "query_used": "electroencephalogram EEG abnormality",
+    "status": "found"
+  },
+  {
+    "item": "thoracic ultrasound, any abnormalities",
+    "cluster": "PROCEDURES",
+    "cui": "C5225655",
+    "preferred_name": "ultrasound of thoracic spine",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "ultrasound spine thoracic",
+      "ultrasound of thoracic spine (procedure)"
+    ],
+    "query_used": "thoracic ultrasound",
+    "status": "found (patch)"
+  },
+  {
+    "item": "chest rx, any abnormalities",
+    "cluster": "PROCEDURES",
+    "cui": "C3842377",
+    "preferred_name": "Chest radiograph",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "chest radiograph",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "gastroscopy , any abnormalities",
+    "cluster": "PROCEDURES",
+    "cui": "C0017195",
+    "preferred_name": "Endoscopy of stomach",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Endoscopy of stomach, NOS",
+      "STOMACH: ENDOSCOPY",
+      "endoscopy stomach",
+      "Gastroscopy",
+      "Gastroscopy"
+    ],
+    "query_used": "gastroscopy",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "brain ct scan, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C5410818",
+    "preferred_name": "Computed tomography (CT) of brain with contrast material",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "brain computed tomography CT",
+    "status": "found (patch)"
+  },
+  {
+    "item": "brain mri, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C3702236",
+    "preferred_name": "Magnetic resonance imaging, brain, functional MRI",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "brain MRI magnetic resonance imaging",
+    "status": "found"
+  },
+  {
+    "item": "cardiac ultrasound, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C5850687",
+    "preferred_name": "Intraoperative epicardial cardiac ultrasound (ie, echocardiography) for congenital heart disease, diagnostic",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "echocardiography cardiac ultrasound",
+    "status": "found"
+  },
+  {
+    "item": "chest ct scan, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C3166113",
+    "preferred_name": "PhenX measure - respiratory - chest computed tomography - CT",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "chest computed tomography CT",
+    "status": "found (patch)"
+  },
+  {
+    "item": "pulmonary scintigraphy, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C0560738",
+    "preferred_name": "VQ - Ventilation perfusion scan",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Ventilation-Perfusion Scan",
+      "Ventilation-Perfusion Scan",
+      "perfusion ventilation scan",
+      "ventilation perfusion scan",
+      "ventilation/perfusion scan"
+    ],
+    "query_used": "lung ventilation perfusion scan",
+    "status": "found (patch)"
+  },
+  {
+    "item": "abdomen ct scan, any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C0412620",
+    "preferred_name": "CT of abdomen",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Abdomen CT",
+      "abdomen ct",
+      "ct abdomen",
+      "ct of abdomen",
+      "Computerized tomography of abdomen"
+    ],
+    "query_used": "abdominal CT scan",
+    "status": "found (patch)"
+  },
+  {
+    "item": "compression ultrasound (cus), any abnormality",
+    "cluster": "PROCEDURES",
+    "cui": "C2021593",
+    "preferred_name": "venous Doppler ultrasound of lower extremity",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "venous ultrasound lower extremity",
+    "status": "found (patch3)"
+  },
+  {
+    "item": "carotid sinus massage",
+    "cluster": "PROCEDURES",
+    "cui": "C0741983",
+    "preferred_name": "Carotid sinus hypersensitivity",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "CAROTID SINUS HYPERSENSITIVITY",
+      "carotid sinus; hypersensitivity",
+      "hypersensitivity; carotid sinus",
+      "Carotid sinus hypersensitivity (disorder)",
+      "sinus caroticus; hypersensitivity"
+    ],
+    "query_used": "carotid sinus hypersensitivity",
+    "status": "found (patch)"
+  },
+  {
+    "item": "supine-to-standing systolic blood pressure test",
+    "cluster": "PROCEDURES",
+    "cui": "C0020651",
+    "preferred_name": "Hypotension, Orthostatic",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "ORTHOSTATIC HYPOTENSION",
+      "ORTHOSTATIC HYPOTENSION",
+      "ORTHOSTATIC HYPOTENSION",
+      "HYPOTENSION ORTHOSTATIC"
+    ],
+    "query_used": "orthostatic hypotension",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "blood in the stool",
+    "cluster": "PROCEDURES",
+    "cui": "C0267596",
+    "preferred_name": "Rectal hemorrhage",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "RECTAL HEMORRHAGE",
+      "HEMORRHAGE RECTAL",
+      "Rectal haemorrhage",
+      "Rectal haemorrhage"
+    ],
+    "query_used": "rectal bleeding",
+    "status": "found (patch2)"
+  },
+  {
+    "item": "performance of thoracentesis",
+    "cluster": "PROCEDURES",
+    "cui": "C3520395",
+    "preferred_name": "Thoracentesis using needle with aspiration of pleural space",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [],
+    "query_used": "thoracentesis pleural aspiration",
+    "status": "found (patch)"
+  },
+  {
+    "item": "neurologist consultation",
+    "cluster": "UTILIZATION",
+    "cui": "C0849229",
+    "preferred_name": "consult with specialist for neurological system",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Consult;specialist;neurology"
+    ],
+    "query_used": "neurology consultation specialist",
+    "status": "found"
+  },
+  {
+    "item": "cardio-pulmonary resuscitation",
+    "cluster": "UTILIZATION",
+    "cui": "C0007203",
+    "preferred_name": "Cardiopulmonary Resuscitation",
+    "semantic_types": [],
+    "tuis": [],
+    "alternatives": [
+      "Cardiopulmonary resuscitation, NOS",
+      "CARDIOPULMONARY RESUSCITATION",
+      "Resuscitation, Cardiopulmonary",
+      "Cardiopulmonary resuscitation"
+    ],
+    "query_used": "cardiopulmonary resuscitation CPR",
+    "status": "found"
+  }
+]

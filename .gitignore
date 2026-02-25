@@ -1,0 +1,36 @@
+.env
+__pycache__/
+.pytest_cache/
+.DS_Store
+.venv/
+venv/
+
+# Outputs
+submissions/
+outputs/
+results/
+eval_results/
+
+# Data (never commit clinical data)
+*.jsonl
+*.csv
+*.zip
+!external/**/*.jsonl
+
+# Model artifacts
+*.safetensors
+*.bin
+*.pt
+*.gguf
+adapter*/
+
+# LaTeX build artifacts
+paper/latex/*.aux
+paper/latex/*.bbl
+paper/latex/*.blg
+paper/latex/*.fdb_latexmk
+paper/latex/*.fls
+paper/latex/*.log
+paper/latex/*.out
+paper/latex/*.pdf
+paper/latex/*.synctex.gz

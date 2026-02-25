@@ -1,0 +1,12 @@
+datasets>=2.18.0
+python-dotenv>=1.0.0
+tqdm>=4.66.0
+requests>=2.31.0
+
+# Inference (Transformers) — optional, for HF backend
+transformers>=4.41.0,<5.0.0
+accelerate>=0.25.0
+torch>=2.1.0
+peft>=0.10.0
+sentencepiece>=0.2.0
+protobuf>=4.25.0
