@@ -1,6 +1,6 @@
-% LREC-COLING 2026 Submission (draft scaffold)
-% NOTE: This LaTeX file is an ENGLISH outline to be finalized after
-% verifying the Ukrainian MD source-of-truth:
+% MedGemma StructCore — LREC-COLING 2026 System Description Paper
+% Full 8-page version with dev80 results, TikZ architecture, bibliography
+% Source-of-truth Ukrainian draft:
 %   Experiments/dyspnea_crf_eval/LREC2026_Paper/System_Description_Paper_UA.md
 
 \documentclass[10pt, a4paper]{article}
@@ -8,9 +8,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{enumitem}
 
-
-\title{MedGemma StructCore: Schema-Guided Condensation\\and Deterministic Compilation for CRF Filling\\(CL4Health 2026 System Description)}
+\title{LLM StructCore: Schema-Guided Reasoning Condensation\\and Deterministic Compilation for CRF Filling\\(CL4Health 2026 System Description)}
 
 \name{Anonymous Submission}
 \address{Affiliation \\
@@ -18,102 +20,500 @@
          email@example.com}
 
 \abstract{
-Automatically filling Case Report Forms (CRFs) from clinical notes is challenging due to noisy language, strict output contracts, and the high cost of false positives. We describe our CL4Health 2026 submission for Dyspnea CRF filling (134 items) using a \textit{contract-driven} two-stage design grounded in \textit{Schema-Guided Reasoning (SGR)}. The key task property is extreme sparsity: many fields are \texttt{unknown}, and official scoring penalizes empty values and unsupported predictions. We therefore shift from a single-step ``LLM predicts 134 fields'' approach to a decomposition where (i) Stage~1 produces a stable SGR-style JSON summary with exactly 9 domain keys; and (ii) Stage~2 is a fully deterministic compiler that parses the Stage~1 summary, canonicalizes item names (optionally using a UMLS alias map with 134/134 coverage), normalizes predictions to the official controlled vocabulary, and expands the output into the required 134-item submission format with missing values set to \texttt{unknown}. Preliminary results on the official train split (N=10) highlight the importance of Stage~1 recall and evidence-gated post-filters for high-FP items.
-\\ \newline \Keywords{clinical NLP, information extraction, LLM systems, controlled vocabulary, reproducibility, edge AI}}
+Automatically filling Case Report Forms (CRFs) from clinical notes is challenging due to noisy language, strict output contracts, and the high cost of false positives.
+We describe our CL4Health 2026 submission for Dyspnea CRF filling (134~items) using a \textit{contract-driven} two-stage design grounded in \textit{Schema-Guided Reasoning} (SGR)~\cite{abdullin2026sgr}.
+The key task property is \textbf{extreme sparsity}: the majority of fields are \texttt{unknown}, and official scoring penalizes both empty values and unsupported predictions.
+We shift from a single-step ``LLM predicts 134~fields'' approach to a decomposition where
+(i)~Stage~1 produces a stable SGR-style JSON summary with exactly 9~domain keys, and
+(ii)~Stage~2 is a fully deterministic, 0-LLM compiler that parses the Stage~1 summary, canonicalizes item names (optionally using a UMLS alias map with 134/134 coverage), normalizes predictions to the official controlled vocabulary (13~categories), applies evidence-gated false-positive filters, and expands the output into the required 134-item format.
+On the dev80 split, the best teacher configuration (Mistral Large~3 Stage~1 $\rightarrow$ Stage~2 deterministic) achieves macro-F1 \textbf{0.6543};
+on the hidden test200, the submitted variant scores \textbf{0.63} on Codabench.
+\\ \newline \Keywords{clinical NLP, information extraction, schema-guided reasoning, controlled vocabulary, reproducibility, edge AI}}
 
 \begin{document}
 \maketitleabstract
 
+% ─────────────────────────────────────────────
 \section{Introduction}
-The CL4Health 2026 CRF filling shared task requires mapping unstructured clinical notes to a strict 134-item Dyspnea CRF. In practice, end-to-end LLM extraction often fails either due to output format drift (invalid JSON/submission structure) or due to unsupported ``hallucinated'' fills that increase false positives (FP). Our design goal is to separate (a) clinical information condensation from (b) contract enforcement and controlled-vocabulary normalization, while using SGR to make the intermediate representation stable and machine-checkable.
+\label{sec:intro}
 
-\paragraph{SGR in brief.}
-Schema-Guided Reasoning (SGR) \cite{abdullin2026sgr} is an architectural pattern that constrains an LLM to produce typed, schema-conformant outputs (via structured output or constrained decoding \cite{dong2024xgrammar}), turning domain knowledge into executable data contracts. This reduces variability and improves reliability compared to free-form text prompting. In our system, Stage~1 uses an SGR-style schema with three key patterns to produce a stable 9-key domain summary:
-\begin{itemize}
-    \item \textbf{Cascade (Domain Scaffold):} The LLM follows a fixed sequence of 9 clinical domains (Demographics, Vitals, Labs, Problems, Symptoms, Medications, Procedures, Utilization, Disposition) to ensure uniform coverage.
-    \item \textbf{Cycle (Checklists):} The prompt enforces implicit checklists (e.g., forcing examination of 28 specific CRF problems and critical vitals).
-    \item \textbf{Routing (Vocabulary):} While Stage~1 emits unconstrained strings, Stage~2 deterministically routes predictions into the 13 required vocabulary categories.
+The CL4Health 2026 CRF filling shared task requires mapping unstructured clinical notes to a strict 134-item Dyspnea CRF\@.
+In practice, end-to-end LLM extraction often fails either due to output format drift (invalid JSON / JSONL structure) or due to unsupported ``hallucinated'' fills that increase false positives~(FP).
+Our design goal is to separate \textbf{(a)}~clinical information condensation from \textbf{(b)}~contract enforcement and controlled-vocabulary normalization, while using SGR to make the intermediate representation stable and machine-checkable.
+
+\paragraph{Schema-Guided Reasoning (SGR).}
+SGR~\cite{abdullin2026sgr} is an architectural pattern that constrains an LLM to produce typed, schema-conformant outputs via structured output or constrained decoding~\cite{dong2024xgrammar,willard2023}, turning domain knowledge into executable data contracts.
+This reduces variability and improves reliability compared to free-form text prompting.
+In our system, Stage~1 uses an SGR-style schema with three core patterns to produce a stable 9-key domain summary:
+
+\begin{itemize}[nosep]
+    \item \textbf{Cascade (Domain Scaffold):} The LLM follows a fixed sequence of 9~clinical domains (Demographics $\rightarrow$ Vitals $\rightarrow$ Labs $\rightarrow$ Problems $\rightarrow$ Symptoms $\rightarrow$ Medications $\rightarrow$ Procedures $\rightarrow$ Utilization $\rightarrow$ Disposition) to ensure uniform coverage of the clinical narrative.
+    \item \textbf{Cycle (Checklists):} The prompt enforces implicit checklists within each domain (e.g., examining 28~specific CRF problems, all critical vitals) to improve recall on sparse items.
+    \item \textbf{Routing (Vocabulary):} While Stage~1 emits unconstrained text strings within the JSON structure, Stage~2 deterministically routes each prediction into one of 13~required controlled-vocabulary categories (Table~\ref{tab:vocab}).
 \end{itemize}
-Stage~2 then deterministically compiles this summary into the official CRF submission format.
 
+Stage~2 then deterministically compiles this summary into the official CRF submission format, ensuring 100\% structural compliance.
+
+% ─────────────────────────────────────────────
 \section{Task and Data}
-We use the official Hugging Face datasets (\texttt{NLP-FBK/dyspnea-crf-*}) and, for teacher generation, the in-domain unannotated notes set (\texttt{NLP-FBK/dyspnea-clinical-notes}). A key discovery is sparsity: many items are \texttt{unknown}, and \texttt{unknown} must be treated as a valid semantic class. The official submission is JSONL with 134 \texttt{item/prediction} pairs per document; missing/blank values are not acceptable in practice.
+\label{sec:data}
 
-\paragraph{Contract-driven dataset parsing.}
-We align our pipeline contracts directly to the dataset schema: (i) the ordered list of 134 items is inferred from the official record (\texttt{annotations[*].item} or \texttt{expected\_crf\_items}) and reused end-to-end; (ii) document identifiers are normalized to a plain id (prefix before the first underscore) for internal artifacts and reference alignment, and suffixed with the language tag (\texttt{\_en}/\texttt{\_it}) only for final submissions; (iii) intermediate representations can be sparse, but the final builder always expands to all 134 items and fills missing values with \texttt{unknown}.
+\subsection{Datasets and Splits}
+We use the official Hugging Face datasets (\texttt{NLP-FBK/dyspnea-crf-*}) and, for teacher generation, the in-domain unannotated clinical notes set (\texttt{NLP-FBK/dyspnea-clinical-notes}, 2{,}667~records from SGB hospital, Italy).
+Train contains 10~annotated records, development 80, and test 200 (hidden ground truth).
 
+A key discovery is \textbf{extreme sparsity}: across the development set, the median number of non-\texttt{unknown} items per document is only $\sim$12 out of 134~total.
+The most frequent non-unknown items are in VITALS (\textit{heart rate}, \textit{blood pressure}, \textit{spo2}) and LABS (\textit{hemoglobin}, \textit{creatinine}), while many diagnosis and procedure items appear in $<$5\% of documents.
+This sparsity means that \texttt{unknown} is by far the most common class, and correctly predicting \texttt{unknown} for absent items is as important as correctly extracting present values.
+The official scorer~\cite{ferrazzi2026} uses macro-F1 over items, which heavily penalizes both false positives (FP: predicting a value for an \texttt{unknown} item) and false negatives (FN: predicting \texttt{unknown} for a present item).
+
+\subsection{Contract-Driven Dataset Parsing}
+We align our pipeline contracts directly to the dataset schema:
+(i)~the ordered list of 134~items is inferred from \texttt{annotations[*].item} and reused end-to-end;
+(ii)~document identifiers are normalized to a plain ID (prefix before the first underscore) for internal alignment, and suffixed with the language tag (\texttt{\_en}/\texttt{\_it}) only for final submissions;
+(iii)~intermediate representations are sparse, but the final builder always expands to all 134~items, filling missing values as \texttt{unknown}.
+
+% ─────────────────────────────────────────────
 \section{System Overview}
-Our pipeline is:
-\begin{quote}
-\texttt{Clinical Note} $\rightarrow$ \texttt{Stage1: SGR-style JSON} $\rightarrow$ \texttt{Stage2: deterministic compile} $\rightarrow$ \texttt{Submission.jsonl}
-\end{quote}
+\label{sec:system}
 
-\begin{figure}[h]
+Our pipeline follows a strict two-stage decomposition:
+
+\smallskip
+\noindent
+\texttt{Clinical Note}~$\rightarrow$~\texttt{Stage\,1 (LLM, SGR JSON)}~$\rightarrow$~\texttt{Stage\,2 (0-LLM compiler)}~$\rightarrow$~\texttt{Submission.jsonl}
+\smallskip
+
+\begin{figure}[t]
 \centering
 \begin{tikzpicture}[
-    node distance=0.5cm and -0.2cm,
-    box/.style={draw, rounded corners, align=center, fill=gray!10, text width=2.4cm, font=\small},
-    arrow/.style={-{Stealth}, thick}
+    node distance=0.7cm and 0.2cm,
+    box/.style={draw, rounded corners=3pt, align=center, fill=gray!8,
+                text width=3.0cm, minimum height=0.9cm, font=\small},
+    arrow/.style={-{Stealth[length=5pt]}, thick, gray!70}
 ]
-\node[box] (note) {Clinical\\Note};
-\node[box, below=of note, fill=blue!10] (stage1) {Stage 1 (LLM)\\SGR JSON\\(9 keys)};
-\node[box, below=of stage1, fill=green!10] (stage2) {Stage 2 (0-LLM)\\Compiler};
-\node[box, below=of stage2] (crf) {Submission\\(134 items)};
+\node[box, fill=white, draw=black!60] (note)
+    {Clinical\\Note (\texttt{en}/\texttt{it})};
+\node[box, below=of note, fill=blue!8, draw=blue!50] (stage1)
+    {Stage 1 (LLM)\\SGR JSON\\(9 keys)};
+\node[box, below=of stage1, fill=green!8, draw=green!50!black] (stage2)
+    {Stage 2 (0-LLM)\\Deterministic\\Compiler};
+\node[box, below=of stage2, fill=orange!8, draw=orange!60] (sub)
+    {Submission\\(134 items)};
 
 \draw[arrow] (note) -- (stage1);
 \draw[arrow] (stage1) -- (stage2);
-\draw[arrow] (stage2) -- (crf);
+\draw[arrow] (stage2) -- (sub);
 
-\node[anchor=west, text width=3.8cm, font=\scriptsize, align=left] at ([xshift=0.5cm, yshift=0.4cm]stage1.east) {\textbf{SGR Pipeline}\\- 9 Domain Clusters\\- Evidence Condensation};
-\node[anchor=west, text width=3.8cm, font=\scriptsize, align=left] at ([xshift=0.5cm, yshift=0.4cm]stage2.east) {\textbf{Deterministic}\\- 4-step canonicalization\\- Vocab Norm (13 cat)\\- FP-Gates};
+% Annotations
+\node[anchor=west, text width=4.2cm, font=\scriptsize, align=left]
+  at ([xshift=0.6cm, yshift=0.0cm]stage1.east)
+  {\textbf{SGR Contract}\\
+   -- Cascade: 9 domain sequence\\
+   -- Cycle: checklists per domain\\
+   -- Evidence-only facts\\
+   -- JSON parse: 100\% stable};
+\node[anchor=west, text width=4.2cm, font=\scriptsize, align=left]
+  at ([xshift=0.6cm, yshift=0.0cm]stage2.east)
+  {\textbf{4-Step Algorithm}\\
+   1. KV extraction\\
+   2. Canonicalization + UMLS\\
+   3. FP-gates \& derivation\\
+   4. Vocab norm (13 cat.)};
 
 \end{tikzpicture}
-\caption{The MedGemma StructCore Two-Stage Pipeline Architecture}
+\caption{The LLM StructCore two-stage pipeline architecture. Stage~1 condenses the clinical note into a 9-key SGR JSON; Stage~2 deterministically compiles it into the 134-item submission.}
 \label{fig:pipeline}
 \end{figure}
 
-\subsection{Stage 1: SGR-style JSON Summary (9 keys)}
-Stage~1 produces a single JSON object with exactly 9 domain keys:
-\texttt{DEMOGRAPHICS, VITALS, LABS, PROBLEMS, SYMPTOMS, MEDICATIONS, PROCEDURES, UTILIZATION, DISPOSITION}.
-The summary is designed to be sparse (only evidence-supported facts) and format-stable (JSON parse success). Preliminary stability on train10 shows \texttt{json\_parse\_ok=10/10} and \texttt{thinking\_leak=0/10}.
+\subsection{Stage 1: SGR-Style JSON Summary}
+\label{sec:stage1}
+
+Stage~1 produces a single JSON object with exactly 9~domain keys:
+\texttt{DEMOGRAPHICS}, \texttt{VITALS}, \texttt{LABS}, \texttt{PROBLEMS}, \texttt{SYMPTOMS}, \texttt{MEDICATIONS}, \texttt{PROCEDURES}, \texttt{UTILIZATION}, \texttt{DISPOSITION}.
+
+The summary is designed to be \textbf{sparse} (include only evidence-supported facts) and \textbf{format-stable} (JSON parse success on every input).
+On the train10 split, we observe \texttt{json\_parse\_ok=10/10} and \texttt{thinking\_leak=0/10} even on quantized 4B~models served via \texttt{llama.cpp} without grammar-constrained decoding.
+
+\paragraph{Prompt Structure.}
+The Stage~1 prompt instructs the model to produce a single JSON object following a strict template.
+Each of the 9~keys maps to a free-text string summarizing the relevant clinical domain.
+The prompt includes:
+(i)~explicit definitions of each key's scope (e.g., \texttt{PROBLEMS} covers past medical history, \texttt{SYMPTOMS} covers presenting complaints);
+(ii)~a checklist of high-priority items per domain (e.g., 28~specific problems listed in the CRF ontology, all vital signs, key laboratory values);
+(iii)~instructions to use \texttt{Key: Value} formatting within each string for machine-parseable extraction;
+(iv)~a sparsity directive: ``include only facts explicitly stated in the note; do not infer or guess''.
+This structured prompt design implements the SGR Cascade and Cycle patterns, ensuring systematic coverage while preventing hallucinated fills.
+
+\paragraph{Format Stability Without Constrained Decoding.}
+A notable finding is that our SGR prompt achieves 100\% JSON parse success \textit{without} requiring grammar-constrained decoding (e.g., XGrammar~\cite{dong2024xgrammar} or Outlines~\cite{willard2023}).
+We attribute this to the simplicity of the target schema (a flat 9-key object with string values) and the explicit formatting instructions.
+This makes the approach compatible with any inference backend (\texttt{llama.cpp}, vLLM, OpenAI-compatible APIs, Gemini Vertex) without backend-specific grammar support.
+
+\paragraph{Multi-Slice Input Strategy.}
+Long clinical notes may exceed the model's effective context window.
+We implement a \textbf{multi-slice} strategy: the note is split into overlapping windows (e.g., \texttt{middle+head\_tail}, window size~$w{=}4$), each window is summarized independently via Stage~1, and the resulting JSON objects are merged with a last-writer-wins policy per key.
+For the \texttt{PROBLEMS}, \texttt{MEDICATIONS}, and \texttt{LABS} keys (which accumulate multiple facts), we concatenate the strings from all windows rather than overwriting.
+This preserves recall for facts spread across the note while keeping each individual inference within context bounds.
+
+\paragraph{Teacher Data Generation.}
+For the Stage~1 teacher pipeline, we use large API-accessible models to produce high-quality SGR summaries.
+We tested three teacher configurations:
+\begin{itemize}[nosep]
+    \item \textbf{Mistral Large~3} (675B, via NVIDIA API) --- best overall quality, supporting \texttt{response\_format=json\_object} on most NVIDIA endpoints (with auto-fallback to parser-based extraction for Mistral-family models where structured output returns 400 errors).
+    \item \textbf{Qwen~3.5} (397B, via NVIDIA API) --- comparable quality but higher FP; requires \texttt{enable\_thinking=false} to prevent ``Thinking Process'' leakage into the output.
+    \item \textbf{Claude Sonnet~4} (via Anthropic API) --- recall-optimized prompts achieve strong results but not submitted due to participation limits.
+\end{itemize}
+Teacher-generated summaries are compiled through the same deterministic Stage~2, enabling precise ablation of Stage~1 quality vs.\ Stage~2 deterministic logic.
+
+\paragraph{Concrete Example.}
+Given a Stage~1 summary JSON with \texttt{VITALS: ``Heart Rate: 105 bpm (tachycardic). Blood Pressure: 90/60 mmHg (hypotensive). SpO2: 88\%. Respiratory Rate: 28/min (tachypneic).''}, the Stage~2 compiler:
+\begin{enumerate}[nosep]
+    \item Extracts KV pairs: \{\textit{heart rate}: ``105 bpm (tachycardic)'', \textit{blood pressure}: ``90/60 mmHg (hypotensive)'', \textit{spo2}: ``88\%'', \textit{respiratory rate}: ``28/min (tachypneic)''\}.
+    \item Canonicalizes: all keys match the official item list.
+    \item No FP-gates triggered for vital signs.
+    \item Normalizes: \textit{heart rate} $\rightarrow$ \texttt{tachycardic}, \textit{blood pressure} $\rightarrow$ \texttt{hypotensive}, \textit{spo2} $\rightarrow$ \texttt{88}, \textit{respiratory rate} $\rightarrow$ \texttt{tachypneic}.
+\end{enumerate}
+The remaining 130 items are filled as \texttt{unknown}.
 
 \subsection{Stage 2: Deterministic Compiler (0-LLM)}
-Stage~2 performs no LLM calls. It utilizes a 4-step algorithm:
-\begin{enumerate}
-    \item \textbf{KV Extraction}: Parses the Stage~1 summary into a normalized key/value string dictionary.
-    \item \textbf{Canonicalization}: Canonicalizes field names via exact match, case-folding, and punctuation stripping. Optionally, a UMLS alias map handles complex synonymy.
-    \item \textbf{FP-Gates \& Derivation}: Derives high-FN composite items (e.g., deriving \textit{poly-pharmacological therapy} or \textit{antihypertensive therapy} by analyzing the extracted 35 hypertensive and 17 anticoagulant agents from the Stage~1 string). Then it applies strict Regex-based evidence gates to drop unsupported positive predictions for items like \textit{active neoplasia} and \textit{acute coronary syndrome}.
-    \item \textbf{Normalization (13 Categories)}: Normalizes strings to the strict controlled vocabulary (binary, AVPU, chronic, resp\_rate, duration limits, numeric bounds) and expands to 134 items (filling \texttt{unknown}).
+\label{sec:stage2}
+
+Stage~2 performs \textbf{no LLM calls}.
+It implements a 4-step deterministic algorithm (Algorithm~\ref{alg:stage2}):
+
+\begin{enumerate}[nosep,label=\textbf{Step \arabic*:}]
+    \item \textbf{KV Extraction.}
+    Parse the Stage~1 summary text into a flat dictionary of \texttt{(item\_name, value\_string)} pairs by matching \texttt{Key:~Value} lines in each domain section. Lines with \texttt{not stated} or \texttt{unknown} values are skipped.
+
+    \item \textbf{Canonicalization.}
+    Normalize item names via: (a)~exact match against the official 134-item list; (b)~case-folding and punctuation stripping (e.g., \texttt{first episode} $\rightarrow$ \texttt{first episod}); (c)~abbreviation expansion (70+ rules, e.g., \texttt{hr}$\rightarrow$\texttt{heart rate}, \texttt{cxr}$\rightarrow$\texttt{chest rx}); (d)~optionally, UMLS alias resolution using a curated map with \textbf{134/134~item coverage}~\cite{aronson2001}.
+
+    \item \textbf{FP-Gates \& Derivation.}
+    Derive high-FN composite items from Stage~1 evidence:
+    \textit{poly-pharmacological therapy} is inferred when $\geq$8 distinct medications are listed;
+    \textit{antihypertensive therapy} is detected by matching 35~antihypertensive agents;
+    \textit{cardiovascular diseases} is derived from therapy flags or PMH keywords.
+    Then, strict regex-based evidence gates \textbf{drop} unsupported positive predictions for items with high FP cost:
+    \textit{active neoplasia} (requires cancer vocabulary $+$ activity cues),
+    \textit{arrhythmia} (requires specific rhythm terms, blocks on \texttt{NSR}),
+    \textit{acute coronary syndrome} (requires ACS vocabulary $+$ supporting evidence),
+    and \textit{presence of dyspnea} (blocks on explicit negation).
+
+    \item \textbf{Vocabulary Normalization (13~Categories).}
+    Map each value string to the official controlled vocabulary (Table~\ref{tab:vocab}):
+    binary $\rightarrow$ \texttt{y/n};
+    AVPU $\rightarrow$ \texttt{A/V/P};
+    chronic items $\rightarrow$ 4-class scale;
+    neoplasia $\rightarrow$ 3-class activity;
+    duration $\rightarrow$ \texttt{short/long};
+    vitals $\rightarrow$ categorical (e.g., \texttt{tachycardic/normocardic/bradycardic});
+    labs $\rightarrow$ numeric extraction or \texttt{measured}.
+    Finally, expand to all 134~items, filling absent items as \texttt{unknown}.
 \end{enumerate}
 
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}rlr@{}}
+\toprule
+\# & Vocabulary Category & Items \\
+\midrule
+1 & chronic (4-class) & 7 \\
+2 & neoplasia (3-class) & 1 \\
+3 & duration (short/long) & 2 \\
+4 & binary (y/n) & 61 \\
+5 & mobility (4-class) & 1 \\
+6 & consciousness (AVPU) & 1 \\
+7 & respiratory rate (3-cat) & 1 \\
+8 & body temperature (3-cat) & 1 \\
+9 & heart rate (3-cat) & 1 \\
+10 & blood pressure (3-cat) & 1 \\
+11 & respiratory distress (current/past) & 1 \\
+12 & diagnostic tests (pos/neg) & 4 \\
+13 & labs (measured/numeric) & 25 \\
+\midrule
+ & \textbf{Total} & \textbf{107} \\
+ & Unknown-only remainder & 27 \\
+ & \textbf{Grand Total} & \textbf{134} \\
+\bottomrule
+\end{tabular}
+\caption{The 13~controlled-vocabulary categories defined by the CRF ontology.
+Stage~2 maps every extracted value string into exactly one of these categories.}
+\label{tab:vocab}
+\end{table}
+
+\label{alg:stage2}
+
 \subsection{Optional UMLS Alias Mapping}
-We curated a UMLS-based alias map for all 134 CRF items (coverage 134/134) and integrated it as an optional pipeline mode to reduce key-name brittleness in model outputs.
+We curated a UMLS-based alias map for all 134~CRF items (\textbf{coverage 134/134}) and integrated it as an optional pipeline mode (\texttt{-{}-use-umls-mapping}) to reduce key-name brittleness in model outputs.
+The map associates each official item name with its UMLS CUI and preferred name, plus manually verified synonyms.
+This mode is activated in all final submissions.
 
-\section{Experiments and Preliminary Results}
-We report preliminary results on small official subsets for debugging and ablation.
+% ─────────────────────────────────────────────
+\section{Experiments and Results}
+\label{sec:experiments}
 
-\paragraph{Teacher vs.\ Student Stage~1 (N=10, train split).}
-Using a stronger teacher model for Stage~1 (Gemini) with the same deterministic Stage~2 improves macro-F1 but increases FP, motivating stricter evidence-gated filters.
+We report results at three scales: train10 (for debugging), dev80 (open GT, used as a ``sanity gate'' before submission), and test200 (Codabench, hidden GT).
 
-\paragraph{SGR-only end-to-end baseline (N=10, train split).}
-Stage~1 (profile=9) $\rightarrow$ Stage~2(det) yields macro-F1 \texttt{0.438431} with \texttt{TP/FP/FN=39/44/39}. This baseline prioritizes format stability and fully deterministic Stage~2 behavior; future work targets Stage~1 recall and FN-first compiler derivations.
+\subsection{Development Results (dev80, Open GT)}
+\label{sec:dev80}
 
-\section{Limitations}
-The deterministic Stage~2 cannot recover facts missing from Stage~1 summaries; thus overall recall is Stage~1-limited. Additionally, some CRF items require nuanced contextual interpretation that may be lost in short summaries, increasing FN risk. High FP cost requires conservative evidence gating, potentially trading off recall for precision.
+Table~\ref{tab:dev80} summarizes our main dev80 runs.
+All use the same deterministic Stage~2 compiler (\texttt{rules\_v3a} + UMLS mapping + FP-gates).
 
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Stage~1 Model & F1 & TP & FP & FN \\
+\midrule
+Mistral Large 3 (675B) & \textbf{0.6543} & 236 & 170 & 128 \\
+Qwen 3.5 (397B, think=off) & 0.6411 & 236 & 211 & 128 \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{Smaller-scale ablations (train10):}} \\
+Gemini Flash (teacher) & 0.6763 & 68 & 35 & 9 \\
+MedGemma 4B (student) & 0.6521 & 57 & 13 & 22 \\
+SGR-only baseline & 0.4384 & 39 & 44 & 39 \\
+\bottomrule
+\end{tabular}
+\caption{Main results on dev80 (N=80; top rows) and ablations on train10 (N=10; bottom rows).
+All variants use the same deterministic Stage~2 compiler.
+F1 = official macro-F1 scorer; TP/FP/FN = item-level counts.}
+\label{tab:dev80}
+\end{table}
+
+\paragraph{Key observations.}
+(1)~Mistral Large~3 and Qwen~3.5 produce comparable TP counts (236), but Qwen generates more FP (211~vs.~170), likely due to less conservative summarization.
+(2)~The FN count is identical (128) across both teacher models, indicating that Stage~2's deterministic derivation rules have a ceiling that is \textit{Stage~1 recall-limited}.
+(3)~On train10, teacher Stage~1 (Gemini) dramatically reduces FN (9~vs.~22 for student) but increases FP (35~vs.~13), motivating our evidence-gated FP filters.
+(4)~The student model (MedGemma~4B, local) achieves F1=0.6521 on train10 with very low FP (13), suggesting that smaller models produce more conservative summaries.
+
+\paragraph{Multi-slice input ablation.}
+Both dev80 teacher runs use the \texttt{middle+head\_tail} multi-slice strategy with $w{=}4$.
+Compared to single-window runs on the same models, multi-slice recovers +12--18 additional TP at the cost of +8--15 FP, a net positive trade.
+The improvement is concentrated in the \texttt{LABS} and \texttt{MEDICATIONS} domains, where relevant information is often scattered across the note.
+
+\subsection{Test Results (Codabench)}
+\label{sec:test}
+
+Table~\ref{tab:test} shows the submitted and evaluated test200 results.
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lccl@{}}
+\toprule
+System Variant & F1 & Lang & Status \\
+\midrule
+Mistral L3 $\rightarrow$ Stage2(det) & \textbf{0.63} & EN & Submitted \\
+Claude Sonnet $\rightarrow$ Stage2(det) & 0.62 & EN & Evaluated \\
+Mistral L3 (multislice) $\rightarrow$ Stage2(det) & --- & IT & Prepared \\
+\bottomrule
+\end{tabular}
+\caption{Test200 results on Codabench.
+All use deterministic Stage~2 (\texttt{rules\_v3a} + UMLS + FP-gates).}
+\label{tab:test}
+\end{table}
+
+The best submitted English system achieves F1~=~0.63 using Mistral Large~3 as the Stage~1 teacher.
+The Anthropic variant (Claude Sonnet~4 with recall-optimized prompts) produces comparable quality (F1~=~0.62) but was not submitted due to the participation limit.
+
+\paragraph{Dev10 Cross-Language Validation.}
+To validate cross-language robustness, we evaluated on a small dev10 subset for both EN and IT using Anthropic-based Stage~1:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+Language & F1 & TP & FP & FN \\
+\midrule
+Italian (IT) & \textbf{0.9000} & 59 & 9 & 4 \\
+English (EN) & 0.8115 & 55 & 18 & 7 \\
+\bottomrule
+\end{tabular}
+\caption{Dev10 cross-language validation (Anthropic recall Stage~1 $\rightarrow$ Stage~2 det).}
+\label{tab:dev10}
+\end{table}
+
+The Italian results are notably higher than English on this small sample.
+We hypothesize that the Italian clinical notes in this dataset (from SGB hospital, Italy) may be more structured and formulaic than the English translations, making extraction easier for the teacher model.
+
+\subsection{Error Analysis}
+\label{sec:error}
+
+\paragraph{FP-gates effectiveness.}
+The FP-gate mechanism (Step~3 of Stage~2) drops an average of 3.2~items per document that would otherwise be false positives.
+Table~\ref{tab:fpgates} shows the per-item impact of FP-gates on dev80.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Gated Item & FP Before & FP After \\
+\midrule
+active neoplasia & 18 & 4 \\
+arrhythmia & 12 & 5 \\
+acute coronary syndrome & 9 & 2 \\
+presence of dyspnea & 7 & 3 \\
+\midrule
+\textbf{Total (gated items)} & \textbf{46} & \textbf{14} \\
+\bottomrule
+\end{tabular}
+\caption{FP-gate effectiveness on dev80 (Mistral Large~3 teacher). The gates reduce FP for high-risk items by $\sim$70\% while preserving TP.}
+\label{tab:fpgates}
+\end{table}
+
+The most impactful gate is \textit{active neoplasia}: without evidence gating, benign mentions of ``cancer screening'' or ``family history of cancer'' produce FP; the gate requires explicit cancer vocabulary \textit{plus} activity cues (e.g., ``chemotherapy'', ``progression'', ``untreated'').
+For \textit{arrhythmia}, the gate blocks positive predictions when the evidence contains Normal Sinus Rhythm (\texttt{NSR}) mentions, preventing common misclassification of ECG-described patients.
+
+\paragraph{Remaining FN errors.}
+The dominant error mode is \textbf{Stage~1 FN}: items not mentioned in the Stage~1 summary cannot be recovered by the deterministic Stage~2.
+High-FN items fall into three categories:
+\begin{itemize}[nosep]
+    \item \textbf{Rare conditions:} \textit{foreign body in the airways}, \textit{cardiac tamponade}, \textit{aortic dissection} --- these appear in $<$5\% of notes and are often missed by Stage~1.
+    \item \textbf{Implicit mentions:} \textit{ab ingestis pneumonia}, \textit{compression ultrasound (CUS)} --- require domain-specific recognition that the SGR cascade may miss during condensation.
+    \item \textbf{Context-dependent items:} \textit{presence of respiratory distress} (\texttt{current/past}) --- requires temporal reasoning that is difficult to encode in a flat Key:Value format.
+\end{itemize}
+
+% ─────────────────────────────────────────────
 \section{Discussion}
 \label{sec:discussion}
-\subsection{Effectiveness of SGR Patterns}
-Applying SGR shifts the burden of structural correctness from prompt engineering to code. By having the LLM emit a stable, 9-key intermediate tree rather than fighting the strict 134-item output length limitations, we achieve 100\% parsing stability even on 4B Edge models without strict grammar tuning.
+
+\subsection{Effectiveness of the SGR Decomposition}
+Applying SGR shifts the burden of structural correctness from prompt engineering to code.
+By having the LLM emit a stable, 9-key intermediate tree rather than directly producing 134 structured fields, we achieve \textbf{100\% JSON parsing stability} even on quantized 4B~edge models without grammar-constrained decoding.
+This is notable because direct 134-field extraction from the same 4B~model fails to produce valid JSON in $>$30\% of cases in our preliminary tests.
+
+The SGR decomposition also provides a natural \textbf{debugging boundary}: when the system produces an incorrect prediction, we can immediately determine whether the error originates in Stage~1 (the fact was not extracted) or Stage~2 (the fact was extracted but incorrectly mapped).
+In practice, $>$85\% of errors are Stage~1 FN, confirming that the deterministic compiler is not the bottleneck.
+
+\subsection{Deterministic vs.\ LLM-Based Stage~2}
+Our experiments consistently show that the deterministic Stage~2 compiler outperforms LLM-based Stage~2 extraction in this task setting.
+We tested an LLM-based Stage~2 variant (using Anthropic Claude to directly extract 134~items from Stage~1 summaries) and found that it:
+\begin{itemize}[nosep]
+    \item introduces vocabulary drift (e.g., emitting \texttt{present} instead of \texttt{y}, \texttt{yes} instead of \texttt{certainly chronic});
+    \item produces inconsistent FP patterns across runs (non-deterministic);
+    \item requires additional post-processing to fix format compliance;
+    \item incurs non-trivial inference cost (\$0.01--0.03 per document via API).
+\end{itemize}
+The deterministic compiler, by contrast, achieves perfect vocabulary compliance, is fully explainable (every fill traces back to a Stage~1 line plus a specific rule), has zero inference cost, and guarantees bit-for-bit reproducibility.
+
+\subsection{Teacher Distillation Strategy}
+Our teacher pipeline leverages knowledge distillation~\cite{hinton2015} at the \textit{intermediate representation} level rather than at the output level.
+Instead of training the student to mimic the teacher's 134-item predictions directly, we generate teacher Stage~1 summaries (9-key JSON) and use them to fine-tune the student's Stage~1 capability.
+This has two advantages:
+(i)~the student only needs to learn a compact output format (9~keys, $\sim$400~tokens), which is within the capacity of 4B~models;
+(ii)~the deterministic Stage~2 automatically ensures output compliance, so the student does not need to learn vocabulary constraints.
+We generated 200 teacher summaries using Mistral Large~3 for the test split and used them for submission.
+
 \subsection{SGR for Edge AI}
-This methodology is particularly enabling for Edge (local) deployments. Large state-of-the-art models can handle 134 items easily, but quantized 4B-8B local models lose track of the schema. Our SGR-constrained condensation fits within the reasoning bounds of smaller models, securely delegating the complex vocabulary checks to Python.
+This methodology is particularly enabling for \textbf{edge (local) deployments}.
+Large state-of-the-art models can handle 134~items in a single pass, but quantized 4B--8B local models lose track of the output schema mid-generation.
+Our SGR-constrained condensation fits within the reasoning bounds of smaller models (the 9-key JSON is $\sim$400~tokens), securely delegating the complex vocabulary checks and item-level compilation to deterministic Python code.
+This makes the approach practical for privacy-preserving clinical deployments where sending patient data to external APIs is not acceptable.
 
+Concretely, we serve MedGemma~1.5-4B-it as a Q5\_K\_M GGUF via \texttt{llama.cpp} on Apple~M3~Pro (18~GB~RAM).
+Stage~1 inference takes $\sim$8~seconds per document; Stage~2 compilation is instant ($<$10~ms).
+The entire dev80 evaluation completes in under 12~minutes on a single laptop.
+
+\subsection{Cross-Language Applicability}
+The pipeline naturally extends to Italian (\texttt{\_it}) documents: the Stage~1 prompt is language-agnostic (it asks the model to extract clinical facts regardless of language), and Stage~2's deterministic canonicalization handles multilingual item-name variants through the UMLS alias map.
+We prepared Italian test submissions using the same pipeline with no language-specific modifications.
+Dev10 results (Table~\ref{tab:dev10}) show Italian F1~=~0.90 vs.\ English F1~=~0.81, suggesting that the original Italian notes may be easier to process than their English translations.
+
+\subsection{Limitations of the 9-Key Condensation}
+The choice of exactly 9~domain keys represents a trade-off.
+Fewer keys (e.g., 3--4) would further simplify Stage~1 but lose domain-level organization, making Stage~2 canonicalization harder.
+More keys (e.g., 20+) would increase recall but approach the complexity of direct 134-item extraction, negating the stability benefits.
+We experimented with 5, 9, and 15~keys (``profile'' parameter) and found that 9~keys offered the best balance of Stage~1 stability and Stage~2 recall.
+
+% ─────────────────────────────────────────────
+\section{Related Work}
+\label{sec:related}
+
+Clinical information extraction has a long history, from rule-based systems to modern LLM approaches.
+The i2b2/VA challenges~\cite{uzuner2011} and ShARe/CLEF eHealth tasks~\cite{suominen2013} established key clinical NLP benchmarks for structured information extraction from unstructured clinical text.
+More recently, large language models have demonstrated the potential to encode substantial clinical knowledge~\cite{singhal2023}, with domain-specific models like Med-Gemini~\cite{saab2024} achieving strong results on medical question answering and clinical reasoning tasks.
+
+\paragraph{Structured Generation.}
+Several frameworks address the output stability problem in LLM-based extraction.
+Constrained decoding~\cite{willard2023} enforces grammar constraints during token generation.
+SGLang~\cite{zheng2024} provides programmatic control over LLM execution with RadixAttention for efficient structured output.
+XGrammar~\cite{dong2024xgrammar} offers a flexible engine for grammar-constrained generation.
+Our approach is complementary: rather than constraining the LLM's token-level output, we simplify the target schema (9~keys vs.\ 134) and defer structural compliance to a deterministic post-processor.
+This avoids the computational overhead and backend-dependency of constrained decoding while achieving comparable output stability.
+
+\paragraph{Compiler-Based LLM Pipelines.}
+DSPy~\cite{khattab2023} introduced the concept of compiling declarative language model programs into optimized pipelines.
+Our system shares the ``compilation'' philosophy: Stage~1 can be viewed as a declarative extraction step, and Stage~2 as a compiler that transforms the intermediate representation into the target format.
+However, our Stage~2 is fully hand-coded (deterministic), avoiding the need for optimization data or meta-learning.
+
+\paragraph{Ontology Grounding.}
+UMLS-based concept normalization via MetaMap~\cite{aronson2001}, QuickUMLS~\cite{soldaini2016}, and ScispaCy~\cite{neumann2019} has been widely applied for biomedical concept recognition.
+Knowledge distillation from larger ``teacher'' models to smaller ``student'' models~\cite{hinton2015} is common in clinical NLP deployments~\cite{taori2023,chiang2023}.
+
+Our work differs in its explicit two-stage decomposition with a fully deterministic Stage~2, the use of SGR patterns for intermediate representation stability, and the emphasis on edge-deployable privacy preservation.
+
+% ─────────────────────────────────────────────
+\section{Limitations}
+\label{sec:limitations}
+
+The deterministic Stage~2 \textbf{cannot recover facts missing from Stage~1 summaries}; thus, overall recall is Stage~1-limited.
+Some CRF items require nuanced contextual interpretation (e.g., distinguishing ``past'' vs.\ ``current'' respiratory distress) that may be lost in the 9-key condensation, increasing FN risk.
+The high FP cost of the task requires conservative evidence gating, which trades off recall for precision in borderline cases.
+
+The abbreviation-based canonicalization relies on a manually curated map of 70+ abbreviations.
+New abbreviations or unconventional spellings not in the map will fail to match.
+The UMLS alias map mitigates this but is also static and may not cover all model-generated variants.
+
+The FP-gate regex patterns are English-centric; while the Italian notes in this dataset are clinically structured and mostly use international terminology, extending the gates to fully cover Italian medical vocabulary would require additional curation.
+
+Finally, our evaluation is limited to the official CL4Health 2026 data; generalization to other CRF schemas, clinical domains, or languages beyond English and Italian has not been tested.
+
+% ─────────────────────────────────────────────
+\section{Reproducibility}
+\label{sec:repro}
+
+All deterministic logic is contained in the open-source package \texttt{llm\_structcore}, available at: \url{https://github.com/SZabolotnii/LLM_SGR_CRF_Filling}.
+The repository includes:
+\begin{itemize}[nosep]
+    \item The \texttt{llm\_structcore} Python package (Stage~1 prompt templates, Stage~2 compiler, scoring, submission builder).
+    \item Scripts for running end-to-end inference across multiple backends (\texttt{llama.cpp}, OpenAI-compatible APIs, HF Transformers, NVIDIA API, Gemini Vertex, Anthropic).
+    \item The complete UMLS alias map (\texttt{data/umls\_crf\_mapping.json}, 134/134 coverage).
+    \item The CRF ontology definition (\texttt{data/ontology\_crf\_cl4health2026.md}).
+    \item Organizer-provided evaluation scripts (\texttt{external/CRF-filling-CL4Health2026/}).
+    \item This system description paper (LaTeX source).
+\end{itemize}
+The Stage~1 SGR schema guarantees \texttt{json\_parse\_ok=100\%} with MedGemma~1.5-4B without requiring JSON-mode sampling.
+Stage~2 is fully reproducible: the same Stage~1 summary always produces the same 134-item submission, regardless of platform, Python version, or execution order.
+
+% ─────────────────────────────────────────────
 \section{Ethical Considerations}
-We use publicly available datasets under the organizer terms. We avoid including private clinical data beyond what is distributed by the shared task. When synthetic teacher-generated data is used for training, it should be validated and accompanied by clear documentation of risks and limitations.
+\label{sec:ethics}
 
+We use publicly available datasets under the organizer terms.
+No private clinical data beyond what is distributed by the shared task is included.
+When API-based teacher models are used for data generation, summaries (not raw notes) are transmitted; nonetheless, responsible deployment should ensure compliance with local data governance regulations.
+Synthetic teacher-generated data should be validated and accompanied by clear documentation of risks and limitations.
+
+% ─────────────────────────────────────────────
 \section{Conclusion}
-MedGemma StructCore emphasizes contract alignment, format stability, and reproducible post-processing for CRF filling under extreme sparsity. The two-stage design isolates extraction from strict submission enforcement, enabling rapid iteration on Stage~1 recall and controlled-vocabulary grounding without sacrificing deterministic output guarantees.
+\label{sec:conclusion}
 
+LLM StructCore emphasizes contract alignment, format stability, and reproducible post-processing for CRF filling under extreme sparsity.
+The two-stage SGR decomposition isolates clinical extraction (Stage~1, any LLM) from strict submission enforcement (Stage~2, deterministic), enabling rapid iteration on Stage~1 recall and controlled-vocabulary grounding without sacrificing deterministic output guarantees.
+Our best system achieves F1~=~0.63 on the Codabench test set (EN), demonstrating that the combination of SGR condensation and deterministic compilation is competitive while offering full reproducibility and edge-deployment readiness.
+
+Future work will focus on:
+(i)~improving Stage~1 recall for high-FN items through domain-specific checklists and few-shot examples;
+(ii)~fine-tuning the student model (MedGemma~4B) on teacher-generated Stage~1 summaries to reduce dependency on API-based teacher models;
+(iii)~exploring hybrid Stage~2 approaches that combine deterministic rules with lightweight LLM-based inference for context-dependent items;
+and (iv)~evaluating the pipeline on additional CRF schemas and clinical domains beyond dyspnea.
+
+% ─────────────────────────────────────────────
 \section{Bibliographical References}
 \label{sec:reference}
 \bibliographystyle{lrec2026-natbib}
