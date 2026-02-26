@@ -1,6 +1,6 @@
-# MedGemma StructCore: Schema-Guided Condensation and Deterministic Compilation for CRF Filling
+# LLM StructCore: Schema-Guided Condensation and Deterministic Compilation for CRF Filling
 
-This repository contains the official codebase for the MedGemma StructCore submission to the **CRF-filling Shared Task at CL4Health (LREC-COLING 2026)**.
+This repository contains the official codebase for the LLM StructCore submission to the **CRF-filling Shared Task at CL4Health (LREC-COLING 2026)**.
 
 ## Architecture
 
