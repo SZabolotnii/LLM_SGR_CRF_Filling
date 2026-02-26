@@ -15,7 +15,7 @@ The system uses a **two-stage, contract-driven pipeline** to solve the extreme s
 - `scripts/` - CLI entrypoints for running end-to-end inference across various backends (llama.cpp, vLLM/OpenAI-compat, Transformers, NVIDIA API, Gemini Vertex).
 - `data/` - Static assets including the UMLS CRF alias mapping (`134/134` coverage) and the task ontology.
 - `external/` - Organizer-provided evaluation scripts (`scoring.py`, `check_submission_format.py`).
-- `paper/` - The LREC 2026 system description paper (LaTeX and Ukrainian source).
+- `paper/` - The LREC 2026 system description paper (compiled PDF).
 
 ## Quickstart
 
