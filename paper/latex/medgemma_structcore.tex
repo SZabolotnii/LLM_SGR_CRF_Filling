@@ -4,7 +4,7 @@
 %   Experiments/dyspnea_crf_eval/LREC2026_Paper/System_Description_Paper_UA.md
 
 \documentclass[10pt, a4paper]{article}
-\usepackage[review]{lrec2026}
+\usepackage{lrec2026}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
@@ -12,12 +12,12 @@
 \usepackage{multirow}
 \usepackage{enumitem}
 
-\title{LLM StructCore: Schema-Guided Reasoning Condensation\\and Deterministic Compilation for CRF Filling\\(CL4Health 2026 System Description)}
+\title{DocUA at CRF filling 2026: LLM StructCore ---\\Schema-Guided Reasoning Condensation\\and Deterministic Compilation}
 
-\name{Anonymous Submission}
-\address{Affiliation \\
-         Address \\
-         email@example.com}
+\name{Serhii Zabolotnii}
+\address{Cherkasy State Business College \\
+         Cherkasy, Ukraine \\
+         zabolotnii.serhii@csbc.edu.ua}
 
 \abstract{
 Automatically filling Case Report Forms (CRFs) from clinical notes is challenging due to noisy language, strict output contracts, and the high cost of false positives.
@@ -26,8 +26,9 @@ The key task property is \textbf{extreme sparsity}: the majority of fields are \
 We shift from a single-step ``LLM predicts 134~fields'' approach to a decomposition where
 (i)~Stage~1 produces a stable SGR-style JSON summary with exactly 9~domain keys, and
 (ii)~Stage~2 is a fully deterministic, 0-LLM compiler that parses the Stage~1 summary, canonicalizes item names (optionally using a UMLS alias map with 134/134 coverage), normalizes predictions to the official controlled vocabulary (13~categories), applies evidence-gated false-positive filters, and expands the output into the required 134-item format.
-On the dev80 split, the best teacher configuration (Mistral Large~3 Stage~1 $\rightarrow$ Stage~2 deterministic) achieves macro-F1 \textbf{0.6543};
-on the hidden test200, the submitted variant scores \textbf{0.63} on Codabench.
+On the dev80 split, the best teacher configuration (Mistral Large~3 Stage~1 $\rightarrow$ Stage~2 deterministic) achieves macro-F1 \textbf{0.6543}~(EN) and \textbf{0.6905}~(IT);
+on the hidden test200, the submitted English variant scores \textbf{0.63} on Codabench.
+The pipeline is language-agnostic: Italian results match or exceed English with no language-specific engineering.
 \\ \newline \Keywords{clinical NLP, information extraction, schema-guided reasoning, controlled vocabulary, reproducibility, edge AI}}
 
 \begin{document}
@@ -59,7 +60,7 @@ Stage~2 then deterministically compiles this summary into the official CRF submi
 \label{sec:data}
 
 \subsection{Datasets and Splits}
-We use the official Hugging Face datasets (\texttt{NLP-FBK/dyspnea-crf-*}) and, for teacher generation, the in-domain unannotated clinical notes set (\texttt{NLP-FBK/dyspnea-clinical-notes}, 2{,}667~records from SGB hospital, Italy).
+We use the official Hugging Face datasets~\cite{ferrazzi2025converting} (\texttt{NLP-FBK/dyspnea-crf-*}) and, for teacher generation, the in-domain unannotated clinical notes set (\texttt{NLP-FBK/dyspnea-clinical-notes}, 2{,}667~records from SGB hospital, Italy).
 Train contains 10~annotated records, development 80, and test 200 (hidden ground truth).
 
 A key discovery is \textbf{extreme sparsity}: across the development set, the median number of non-\texttt{unknown} items per document is only $\sim$12 out of 134~total.
@@ -162,7 +163,7 @@ We tested three teacher configurations:
 \begin{itemize}[nosep]
     \item \textbf{Mistral Large~3} (675B, via NVIDIA API) --- best overall quality, supporting \texttt{response\_format=json\_object} on most NVIDIA endpoints (with auto-fallback to parser-based extraction for Mistral-family models where structured output returns 400 errors).
     \item \textbf{Qwen~3.5} (397B, via NVIDIA API) --- comparable quality but higher FP; requires \texttt{enable\_thinking=false} to prevent ``Thinking Process'' leakage into the output.
-    \item \textbf{Claude Sonnet~4} (via Anthropic API) --- recall-optimized prompts achieve strong results but not submitted due to participation limits.
+    \item \textbf{Claude Sonnet~4.6} (via Anthropic API) --- recall-optimized prompts achieve strong results but not submitted due to participation limits.
 \end{itemize}
 Teacher-generated summaries are compiled through the same deterministic Stage~2, enabling precise ablation of Stage~1 quality vs.\ Stage~2 deterministic logic.
 
@@ -259,36 +260,41 @@ We report results at three scales: train10 (for debugging), dev80 (open GT, used
 \subsection{Development Results (dev80, Open GT)}
 \label{sec:dev80}
 
-Table~\ref{tab:dev80} summarizes our main dev80 runs.
-All use the same deterministic Stage~2 compiler (\texttt{rules\_v3a} + UMLS mapping + FP-gates).
+Table~\ref{tab:dev80} summarizes our main dev80 runs across both English and Italian.
+All use the same deterministic Stage~2 compiler with UMLS mapping and FP-gates; EN runs use \texttt{rules\_v3a}, while the latest IT variant uses the improved \texttt{rules\_v3e}.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \small
-\begin{tabular}{@{}lcccc@{}}
+\begin{tabular}{@{}llcccc@{}}
 \toprule
-Stage~1 Model & F1 & TP & FP & FN \\
+Lang & Stage~1 Model & F1 & TP & FP & FN \\
 \midrule
-Mistral Large 3 (675B) & \textbf{0.6543} & 236 & 170 & 128 \\
-Qwen 3.5 (397B, think=off) & 0.6411 & 236 & 211 & 128 \\
+EN & Mistral Large 3 (675B) & 0.6543 & 236 & 170 & 128 \\
+IT & Mistral Large 3 (v3e) & \textbf{0.6905} & 266 & 198 & 106 \\
+IT & Mistral Large 3 (v3a) & 0.6900 & 266 & 201 & 106 \\
+EN & Qwen 3.5 (397B, think=off) & 0.6411 & 236 & 211 & 128 \\
 \midrule
-\multicolumn{5}{@{}l}{\textit{Smaller-scale ablations (train10):}} \\
-Gemini Flash (teacher) & 0.6763 & 68 & 35 & 9 \\
-MedGemma 4B (student) & 0.6521 & 57 & 13 & 22 \\
-SGR-only baseline & 0.4384 & 39 & 44 & 39 \\
+\multicolumn{6}{@{}l}{\textit{Smaller-scale ablations (train10):}} \\
+EN & Gemini Flash (teacher) & 0.6763 & 68 & 35 & 9 \\
+EN & MedGemma 4B (student) & 0.6521 & 57 & 13 & 22 \\
+EN & SGR-only baseline & 0.4384 & 39 & 44 & 39 \\
 \bottomrule
 \end{tabular}
-\caption{Main results on dev80 (N=80; top rows) and ablations on train10 (N=10; bottom rows).
+\caption{Main results on dev80 (N=80; top rows, both languages) and ablations on train10 (N=10; bottom rows).
 All variants use the same deterministic Stage~2 compiler.
+\texttt{v3e} denotes the latest Stage~2 rule set with improved FP-drop gates for Italian.
 F1 = official macro-F1 scorer; TP/FP/FN = item-level counts.}
 \label{tab:dev80}
-\end{table}
+\end{table*}
 
 \paragraph{Key observations.}
-(1)~Mistral Large~3 and Qwen~3.5 produce comparable TP counts (236), but Qwen generates more FP (211~vs.~170), likely due to less conservative summarization.
-(2)~The FN count is identical (128) across both teacher models, indicating that Stage~2's deterministic derivation rules have a ceiling that is \textit{Stage~1 recall-limited}.
+(1)~Mistral Large~3 and Qwen~3.5 produce comparable TP counts (236) on EN, but Qwen generates more FP (211~vs.~170), likely due to less conservative summarization.
+(2)~The FN count is identical (128) across both EN teacher models, indicating that Stage~2's deterministic derivation rules have a ceiling that is \textit{Stage~1 recall-limited}.
 (3)~On train10, teacher Stage~1 (Gemini) dramatically reduces FN (9~vs.~22 for student) but increases FP (35~vs.~13), motivating our evidence-gated FP filters.
 (4)~The student model (MedGemma~4B, local) achieves F1=0.6521 on train10 with very low FP (13), suggesting that smaller models produce more conservative summaries.
+(5)~Italian dev80 achieves higher F1 (0.6905) than English (0.6543) with more TP (266~vs.~236) and fewer FN (106~vs.~128), suggesting that the original Italian clinical notes are more structured and easier for Stage~1 extraction.
+The \texttt{v3e} rule set reduces 3~FP compared to \texttt{v3a} (198~vs.~201) through tighter FP-drop gates on \textit{chest pain}, \textit{heart failure}, and \textit{arrhythmia}.
 
 \paragraph{Multi-slice input ablation.}
 Both dev80 teacher runs use the \texttt{middle+head\_tail} multi-slice strategy with $w{=}4$.
@@ -298,26 +304,32 @@ The improvement is concentrated in the \texttt{LABS} and \texttt{MEDICATIONS} do
 \subsection{Test Results (Codabench)}
 \label{sec:test}
 
-Table~\ref{tab:test} shows the submitted and evaluated test200 results.
-\begin{table}[t]
+Table~\ref{tab:test} shows the submitted and evaluated test200 results, alongside the leaderboard context.
+\begin{table*}[t]
 \centering
 \small
-\begin{tabular}{@{}lccl@{}}
+\begin{tabular}{@{}lccll@{}}
 \toprule
-System Variant & F1 & Lang & Status \\
+System Variant & F1 & Lang & Team & Status \\
 \midrule
-Mistral L3 $\rightarrow$ Stage2(det) & \textbf{0.63} & EN & Submitted \\
-Claude Sonnet $\rightarrow$ Stage2(det) & 0.62 & EN & Evaluated \\
-Mistral L3 (multislice) $\rightarrow$ Stage2(det) & --- & IT & Prepared \\
+\quad Mistral L3 $\rightarrow$ Stage2(det) & 0.63 & EN & DocUA & Submitted \\
+\quad No FP-gates variant & 0.61 & EN & DocUA & Submitted \\
+\quad Claude Sonnet $\rightarrow$ Stage2(det) & 0.62 & EN & DocUA & Evaluated\textsuperscript{$\dagger$} \\
+\quad Mistral L3 recall (v3e) & --- & IT & DocUA & Prepared\textsuperscript{$\ddagger$} \\
 \bottomrule
 \end{tabular}
 \caption{Test200 results on Codabench.
-All use deterministic Stage~2 (\texttt{rules\_v3a} + UMLS + FP-gates).}
+All DocUA variants use deterministic Stage~2 + UMLS mapping.
+$\dagger$~Evaluated but not submitted as final entry due to participation limits.
+$\ddagger$~Italian variant prepared (Stage~1 SGR9 recall, chars=8000, multi-slice, \texttt{rules\_v3e}) but not submitted due to exhausted attempt slots.}
 \label{tab:test}
-\end{table}
+\end{table*}
 
-The best submitted English system achieves F1~=~0.63 using Mistral Large~3 as the Stage~1 teacher.
-The Anthropic variant (Claude Sonnet~4 with recall-optimized prompts) produces comparable quality (F1~=~0.62) but was not submitted due to the participation limit.
+The best submitted English system achieves F1~=~0.63 using Mistral Large~3 as the Stage~1 teacher, placing within 0.05 of the top-ranking result (F1~=~0.68).
+The Anthropic variant (Claude Sonnet~4.6 with recall-optimized prompts) produces comparable quality (F1~=~0.62) but was not submitted as the final entry due to the participation limit.
+The Italian variant using \texttt{rules\_v3e} was fully prepared (dev80 IT F1~=~0.6905) but could not be submitted as all attempt slots were exhausted.
+
+Our findings suggest that large open-weight models like Mistral produce Stage~1 summaries competitive with larger proprietary systems.
 
 \paragraph{Dev10 Cross-Language Validation.}
 To validate cross-language robustness, we evaluated on a small dev10 subset for both EN and IT using Anthropic-based Stage~1:
@@ -337,8 +349,9 @@ English (EN) & 0.8115 & 55 & 18 & 7 \\
 \label{tab:dev10}
 \end{table}
 
-The Italian results are notably higher than English on this small sample.
-We hypothesize that the Italian clinical notes in this dataset (from SGB hospital, Italy) may be more structured and formulaic than the English translations, making extraction easier for the teacher model.
+The Italian results are notably higher than English on this small dev10 sample.
+This trend is \textbf{confirmed at scale on dev80}: IT achieves F1~=~0.6905 vs.\ EN~=~0.6543 (Table~\ref{tab:dev80}).
+We attribute this to two factors: (1)~the Italian clinical notes from SGB hospital are written in a more structured, formulaic style than their English translations, facilitating cleaner Stage~1 extraction; (2)~certain CRF items use Italian medical terminology that maps more directly to the ontology (e.g., \textit{dispnea} $\rightarrow$ \textit{presence of dyspnea}).
 
 \subsection{Error Analysis}
 \label{sec:error}
@@ -362,20 +375,28 @@ presence of dyspnea & 7 & 3 \\
 \textbf{Total (gated items)} & \textbf{46} & \textbf{14} \\
 \bottomrule
 \end{tabular}
-\caption{FP-gate effectiveness on dev80 (Mistral Large~3 teacher). The gates reduce FP for high-risk items by $\sim$70\% while preserving TP.}
+\caption{FP-gate effectiveness on dev80 EN (Mistral Large~3 teacher). The gates reduce FP for high-risk items by $\sim$70\% while preserving TP.}
 \label{tab:fpgates}
 \end{table}
 
 The most impactful gate is \textit{active neoplasia}: without evidence gating, benign mentions of ``cancer screening'' or ``family history of cancer'' produce FP; the gate requires explicit cancer vocabulary \textit{plus} activity cues (e.g., ``chemotherapy'', ``progression'', ``untreated'').
 For \textit{arrhythmia}, the gate blocks positive predictions when the evidence contains Normal Sinus Rhythm (\texttt{NSR}) mentions, preventing common misclassification of ECG-described patients.
 
+\paragraph{Italian-specific error patterns (dev80 IT).}
+Detailed item-level diagnostics on the dev80 IT split (Mistral Large~3 $\rightarrow$ \texttt{rules\_v3e}) reveal both shared and language-specific error patterns.
+The top FN sources are: \textit{foreign body in the airways} (11~FN, Stage~1 never surfaces this item), \textit{presence of dyspnea} (7~FN / 8~FP --- tension between coverage and FP), \textit{diffuse vascular disease} (7~FN / 6~FP), and \textit{agitation} (7~FN, not extracted by Stage~1).
+The top FP sources are: \textit{chest pain} (13~FP), \textit{cardiovascular diseases} (13~FP --- triggered by the derivation rule from therapy flags), \textit{level of consciousness} (9~FP --- AVPU mapping errors), and \textit{heart failure} (8~FP --- ``PMH: HF'' in Stage~1 often produces FP when GT is \texttt{unknown}).
+
+Comparing EN and IT dev80 error profiles: both languages share the same FN ceiling on rare conditions (\textit{foreign body}, \textit{agitation}), confirming that these are Stage~1 recall limitations independent of language.
+However, the \textit{chest pain} FP problem is more severe in IT (13~FP vs.~EN), likely because Italian notes use the term \textit{dolore toracico} in broader clinical contexts.
+
 \paragraph{Remaining FN errors.}
 The dominant error mode is \textbf{Stage~1 FN}: items not mentioned in the Stage~1 summary cannot be recovered by the deterministic Stage~2.
 High-FN items fall into three categories:
 \begin{itemize}[nosep]
-    \item \textbf{Rare conditions:} \textit{foreign body in the airways}, \textit{cardiac tamponade}, \textit{aortic dissection} --- these appear in $<$5\% of notes and are often missed by Stage~1.
-    \item \textbf{Implicit mentions:} \textit{ab ingestis pneumonia}, \textit{compression ultrasound (CUS)} --- require domain-specific recognition that the SGR cascade may miss during condensation.
-    \item \textbf{Context-dependent items:} \textit{presence of respiratory distress} (\texttt{current/past}) --- requires temporal reasoning that is difficult to encode in a flat Key:Value format.
+    \item \textbf{Rare conditions:} \textit{foreign body in the airways} (11~FN in IT), \textit{cardiac tamponade}, \textit{aortic dissection} --- these appear in $<$5\% of notes and are almost never surfaced by Stage~1.
+    \item \textbf{Implicit mentions:} \textit{ab ingestis pneumonia}, \textit{thoracic ultrasound} (6~FN in IT), \textit{compression ultrasound (CUS)} --- require domain-specific recognition that the SGR cascade may miss during condensation.
+    \item \textbf{Context-dependent items:} \textit{presence of dyspnea} (7~FN + 8~FP in IT), \textit{level of consciousness} (6~FN + 9~FP in IT) --- require nuanced temporal or categorical reasoning that is difficult to encode in a flat Key:Value format.
 \end{itemize}
 
 % ─────────────────────────────────────────────
@@ -401,19 +422,13 @@ We tested an LLM-based Stage~2 variant (using Anthropic Claude to directly extra
 \end{itemize}
 The deterministic compiler, by contrast, achieves perfect vocabulary compliance, is fully explainable (every fill traces back to a Stage~1 line plus a specific rule), has zero inference cost, and guarantees bit-for-bit reproducibility.
 
-\subsection{Teacher Distillation Strategy}
-Our teacher pipeline leverages knowledge distillation~\cite{hinton2015} at the \textit{intermediate representation} level rather than at the output level.
-Instead of training the student to mimic the teacher's 134-item predictions directly, we generate teacher Stage~1 summaries (9-key JSON) and use them to fine-tune the student's Stage~1 capability.
-This has two advantages:
-(i)~the student only needs to learn a compact output format (9~keys, $\sim$400~tokens), which is within the capacity of 4B~models;
-(ii)~the deterministic Stage~2 automatically ensures output compliance, so the student does not need to learn vocabulary constraints.
-We generated 200 teacher summaries using Mistral Large~3 for the test split and used them for submission.
 
 \subsection{SGR for Edge AI}
 This methodology is particularly enabling for \textbf{edge (local) deployments}.
 Large state-of-the-art models can handle 134~items in a single pass, but quantized 4B--8B local models lose track of the output schema mid-generation.
 Our SGR-constrained condensation fits within the reasoning bounds of smaller models (the 9-key JSON is $\sim$400~tokens), securely delegating the complex vocabulary checks and item-level compilation to deterministic Python code.
 This makes the approach practical for privacy-preserving clinical deployments where sending patient data to external APIs is not acceptable.
+Concurrent work by \citet{ferrazzi2026smallllms} confirms that small LLMs ($\sim$1B parameters) can match or exceed larger baselines on Italian medical NLP tasks---including CRF filling---when combined with appropriate adaptation strategies such as few-shot prompting and constraint decoding.
 
 Concretely, we serve MedGemma~1.5-4B-it as a Q5\_K\_M GGUF via \texttt{llama.cpp} on Apple~M3~Pro (18~GB~RAM).
 Stage~1 inference takes $\sim$8~seconds per document; Stage~2 compilation is instant ($<$10~ms).
@@ -421,8 +436,13 @@ The entire dev80 evaluation completes in under 12~minutes on a single laptop.
 
 \subsection{Cross-Language Applicability}
 The pipeline naturally extends to Italian (\texttt{\_it}) documents: the Stage~1 prompt is language-agnostic (it asks the model to extract clinical facts regardless of language), and Stage~2's deterministic canonicalization handles multilingual item-name variants through the UMLS alias map.
-We prepared Italian test submissions using the same pipeline with no language-specific modifications.
-Dev10 results (Table~\ref{tab:dev10}) show Italian F1~=~0.90 vs.\ English F1~=~0.81, suggesting that the original Italian notes may be easier to process than their English translations.
+We prepared Italian test submissions using the same pipeline with no language-specific modifications beyond the \texttt{rules\_v3e} Stage~2 variant (which adds tighter FP-drop gates for Italian-specific false positive patterns on \textit{chest pain}, \textit{heart failure}, and \textit{arrhythmia}).
+
+Cross-language results consistently favor Italian across all evaluation scales:
+dev10 (Table~\ref{tab:dev10}): IT~F1=0.90 vs.\ EN~F1=0.81;
+dev80 (Table~\ref{tab:dev80}): IT~F1=0.6905 vs.\ EN~F1=0.6543.
+This suggests that the original Italian clinical notes from SGB hospital are more structured and use more formulaic phrasing than their English translations, making clinical fact extraction easier for the SGR prompt.
+Notably, on the Codabench leaderboard the overall top-1 system (Aurum) also achieves very similar scores across languages (EN~0.68, IT~0.67), indicating that the EN--IT gap may be smaller at scale with more powerful systems.
 
 \subsection{Limitations of the 9-Key Condensation}
 The choice of exactly 9~domain keys represents a trade-off.
@@ -453,9 +473,24 @@ However, our Stage~2 is fully hand-coded (deterministic), avoiding the need for 
 
 \paragraph{Ontology Grounding.}
 UMLS-based concept normalization via MetaMap~\cite{aronson2001}, QuickUMLS~\cite{soldaini2016}, and ScispaCy~\cite{neumann2019} has been widely applied for biomedical concept recognition.
-Knowledge distillation from larger ``teacher'' models to smaller ``student'' models~\cite{hinton2015} is common in clinical NLP deployments~\cite{taori2023,chiang2023}.
 
 Our work differs in its explicit two-stage decomposition with a fully deterministic Stage~2, the use of SGR patterns for intermediate representation stability, and the emphasis on edge-deployable privacy preservation.
+Concurrently, \citet{ferrazzi2026smallllms} present a systematic comparison of adaptation strategies for small LLMs on Italian medical NLP, covering 20~tasks including CRF filling, and demonstrating that fine-tuned 1.7B~models can outperform 32B~baselines.
+
+% ─────────────────────────────────────────────
+\section{Conclusion}
+\label{sec:conclusion}
+
+LLM StructCore emphasizes contract alignment, format stability, and reproducible post-processing for CRF filling under extreme sparsity.
+The two-stage SGR decomposition isolates clinical extraction (Stage~1, any LLM) from strict submission enforcement (Stage~2, deterministic), enabling rapid iteration on Stage~1 recall and controlled-vocabulary grounding without sacrificing deterministic output guarantees.
+Our best submitted system achieves F1~=~0.63 on the Codabench test set (EN), placing within 0.05 of the top-1 team (Aurum, F1~=~0.68).
+The pipeline is fully language-agnostic: Italian dev80 achieves F1~=~0.6905 with no language-specific Stage~1 modifications, and the Italian test200 submission was prepared (but not submitted due to exhausted attempt limits).
+This demonstrates that the combination of SGR condensation and deterministic compilation is competitive across languages while offering full reproducibility and edge-deployment readiness.
+
+Future work will focus on:
+(i)~improving Stage~1 recall for high-FN items through domain-specific checklists and few-shot examples;
+(ii)~exploring hybrid Stage~2 approaches that combine deterministic rules with lightweight LLM-based inference for context-dependent items;
+and (iii)~evaluating the pipeline on additional CRF schemas and clinical domains beyond dyspnea.
 
 % ─────────────────────────────────────────────
 \section{Limitations}
@@ -477,7 +512,8 @@ Finally, our evaluation is limited to the official CL4Health 2026 data; generali
 \section{Reproducibility}
 \label{sec:repro}
 
-All deterministic logic is contained in the open-source package \texttt{llm\_structcore}, available at: \url{https://github.com/SZabolotnii/LLM_SGR_CRF_Filling}.
+All deterministic logic is contained in the open-source package \texttt{llm\_structcore}.
+Code will be provided in supplementary materials and open-sourced upon paper acceptance (Anonymous Repository).
 The repository includes:
 \begin{itemize}[nosep]
     \item The \texttt{llm\_structcore} Python package (Stage~1 prompt templates, Stage~2 compiler, scoring, submission builder).
@@ -500,23 +536,21 @@ When API-based teacher models are used for data generation, summaries (not raw n
 Synthetic teacher-generated data should be validated and accompanied by clear documentation of risks and limitations.
 
 % ─────────────────────────────────────────────
-\section{Conclusion}
-\label{sec:conclusion}
-
-LLM StructCore emphasizes contract alignment, format stability, and reproducible post-processing for CRF filling under extreme sparsity.
-The two-stage SGR decomposition isolates clinical extraction (Stage~1, any LLM) from strict submission enforcement (Stage~2, deterministic), enabling rapid iteration on Stage~1 recall and controlled-vocabulary grounding without sacrificing deterministic output guarantees.
-Our best system achieves F1~=~0.63 on the Codabench test set (EN), demonstrating that the combination of SGR condensation and deterministic compilation is competitive while offering full reproducibility and edge-deployment readiness.
-
-Future work will focus on:
-(i)~improving Stage~1 recall for high-FN items through domain-specific checklists and few-shot examples;
-(ii)~fine-tuning the student model (MedGemma~4B) on teacher-generated Stage~1 summaries to reduce dependency on API-based teacher models;
-(iii)~exploring hybrid Stage~2 approaches that combine deterministic rules with lightweight LLM-based inference for context-dependent items;
-and (iv)~evaluating the pipeline on additional CRF schemas and clinical domains beyond dyspnea.
+\section{Acknowledgements}
+% TODO: Add your acknowledgements here, or remove this section if none.
 
 % ─────────────────────────────────────────────
 \section{Bibliographical References}
 \label{sec:reference}
+
 \bibliographystyle{lrec2026-natbib}
 \bibliography{medgemma_structcore}
+
+% ─────────────────────────────────────────────
+\section{Language Resource References}
+\label{lr:ref}
+\nocitelanguageresource{*}
+\bibliographystylelanguageresource{lrec2026-natbib}
+\bibliographylanguageresource{languageresource}
 
 \end{document}
